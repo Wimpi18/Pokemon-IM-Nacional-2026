@@ -3,7 +3,15 @@ import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService, RankedPatrol } from '../leaderboard.service';
 import { Cursante } from '../../core/models/firebase.models';
-import { of, switchMap, tap } from 'rxjs';
+import {
+  of,
+  switchMap,
+  tap,
+  filter,
+  distinctUntilChanged,
+  map,
+  catchError,
+} from 'rxjs';
 
 @Component({
   selector: 'app-tablero',
@@ -30,21 +38,27 @@ export class TableroComponent {
 
   /**
    * Reactively subscribe to ranked patrols when profile changes.
-   * Uses toObservable + switchMap to properly cancel/resubscribe.
+   * Filters out null profiles to avoid premature empty emissions on page refresh.
+   * Only re-subscribes when the course actually changes.
    */
   private readonly rankedPatrols$ = toObservable(this.profile).pipe(
-    switchMap((p) => {
-      if (p?.course) {
+    filter((p): p is NonNullable<typeof p> => p !== null),
+    map((p) => ({ course: p.course, patrolId: this.currentPatrolId() })),
+    distinctUntilChanged((a, b) => a.course === b.course),
+    switchMap(({ course, patrolId }) => {
+      if (course) {
         this.isLoading.set(true);
-        return this.leaderboardService.getRankedPatrols(
-          p.course,
-          this.currentPatrolId(),
-        );
+        return this.leaderboardService.getRankedPatrols(course, patrolId);
       }
       this.isLoading.set(false);
       return of([]);
     }),
     tap(() => this.isLoading.set(false)),
+    catchError((err) => {
+      console.error('[Tablero] Error cargando ranking:', err);
+      this.isLoading.set(false);
+      return of([]);
+    }),
   );
 
   readonly rankedPatrols = toSignal(this.rankedPatrols$, {
