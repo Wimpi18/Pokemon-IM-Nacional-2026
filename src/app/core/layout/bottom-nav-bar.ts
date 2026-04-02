@@ -23,7 +23,7 @@ export class BottomNavBarComponent {
       return [
         {
           path: '/gestion-de-puntos',
-          icon: 'settings_remote',
+          icon: 'stars',
           label: 'Gestión',
         },
         { path: '/tablero', icon: 'leaderboard', label: 'Tablero' },
