@@ -60,9 +60,19 @@ export class LoginComponent {
       try {
         await this.authService.loginEmail(email, password);
         this.router.navigate(['/']); // Redirigir al gestor principal
-      } catch {
+      } catch (err) {
+        const error = err as Error;
         this.isLoading.set(false);
-        this.errorMessage.set('Credenciales incorrectas.');
+        if (
+          error?.message === 'access-denied' ||
+          error?.message === 'not-found'
+        ) {
+          this.errorMessage.set(
+            'Acceso denegado. Tu cuenta no tiene privilegios de dirigente.',
+          );
+        } else {
+          this.errorMessage.set('Credenciales incorrectas.');
+        }
       }
     });
   }

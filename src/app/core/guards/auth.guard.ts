@@ -13,10 +13,13 @@ export const authGuard: CanActivateFn = () => {
   return toObservable(authService.isAuthReady).pipe(
     filter((isReady) => isReady),
     map(() => {
-      // Una vez que Firebase revisó localmente si hay sesión, comprobamos:
-      if (authService.currentUser()) {
+      // Validamos no solo que esté autenticado, sino que su rol en DB sea permitido
+      const profile = authService.userProfile();
+      if (authService.currentUser() && profile?.role === 'dirigente') {
         return true;
       }
+
+      // Si no hay sesión, o si el rol es cursante, expulsarlo
       return router.createUrlTree(['/login']);
     }),
   );

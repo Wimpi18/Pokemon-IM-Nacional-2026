@@ -7,7 +7,7 @@ import { BottomNavBarComponent } from './bottom-nav-bar';
   selector: 'app-shell',
   imports: [RouterOutlet, TopAppBarComponent, BottomNavBarComponent],
   template: `
-    <app-top-app-bar title="Gestión de Puntos" icon="capture"></app-top-app-bar>
+    <app-top-app-bar title="IM Nacional 2026" icon="capture"></app-top-app-bar>
     <router-outlet></router-outlet>
     <app-bottom-nav-bar></app-bottom-nav-bar>
   `,

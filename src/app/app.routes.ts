@@ -20,6 +20,13 @@ export const routes: Routes = [
             (m) => m.PointsManagement,
           ),
       },
+      {
+        path: 'registrar-cursante',
+        loadComponent: () =>
+          import('./participants-management/participant-registration/participant-registration').then(
+            (m) => m.ParticipantRegistrationComponent,
+          ),
+      },
       { path: '', redirectTo: 'gestion-de-puntos', pathMatch: 'full' },
     ],
   },

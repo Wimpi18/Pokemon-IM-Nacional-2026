@@ -1,28 +1,33 @@
 import { Timestamp } from '@angular/fire/firestore';
 
 export interface User {
-  uid?: string; // Normalmente el Document ID se extrae dinámicamente, pero puede ser útil aquí
-  role: 'cursante' | 'dirigente' | 'admin';
+  uid: string;
   realName: string;
   nickname: string;
   phoneNumber: string;
-  patrolId: string; // Referencia al ID de la patrulla
   course: string;
-  profilePhotoId: string;
   selectedPokemon: string;
-  createdAt: Timestamp; // Firestore timestamp
+  createdAt: Timestamp;
+}
+
+export interface Cursante extends User {
+  role: 'cursante';
+  patrolId: string;
+}
+
+export interface Dirigente extends User {
+  role: 'dirigente';
 }
 
 export interface Patrol {
-  id?: string; // Document ID
+  id: string;
   name: string;
   course: string;
   totalScore: number;
-  memberCount: number;
 }
 
 export interface PointTransaction {
-  id?: string;
+  id: string;
   patrolId: string;
   targetType: 'cursante' | 'patrulla';
   targetId: string;

@@ -17,6 +17,7 @@ export class BottomNavBarComponent {
   readonly navItems: NavItem[] = [
     { path: '/gestion-de-puntos', icon: 'settings_remote', label: 'Gestión' },
     { path: '/tablero', icon: 'leaderboard', label: 'Tablero' },
+    { path: '/registrar-cursante', icon: 'person_add', label: 'Inscribir' },
     { path: '/patrulla', icon: 'explore', label: 'Patrulla' },
     { path: '/perfil', icon: 'person', label: 'Perfil' },
   ];
