@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { form, required, submit, validate } from '@angular/forms/signals';
 import {
   ButtonComponent,
   AutocompleteComponent,
@@ -42,50 +43,92 @@ export class PointsManagement {
     return firestorePatrols;
   });
 
-  selectedTarget = signal<string>('');
-  pointsAdjustment = signal<number>(0);
-  justification = signal<string>('');
+  // 1. Modelo fuente de verdad
+  formModel = signal({
+    selectedTarget: '',
+    pointsAdjustment: 0,
+    justification: '',
+  });
+
+  // 2. Definición del formulario con validaciones
+  managementForm = form(this.formModel, (schemaPath) => {
+    required(schemaPath.selectedTarget, {
+      message: 'Debe seleccionar una patrulla o cursante',
+    });
+
+    validate(schemaPath.pointsAdjustment, ({ value }) => {
+      if (value() === 0) {
+        return {
+          kind: 'zeroValue',
+          message: 'El valor numérico debe ser distinto de 0',
+        };
+      }
+      return null;
+    });
+
+    required(schemaPath.justification, {
+      message: 'La justificación es obligatoria',
+    });
+  });
+
   isSaving = signal<boolean>(false);
   showSuccess = signal<boolean>(false);
 
-  /** Validation — true when form can be submitted */
-  isValid = computed(
-    () =>
-      this.selectedTarget() !== '' &&
-      this.pointsAdjustment() !== 0 &&
-      this.justification().trim().length > 0,
-  );
+  // 3. Getters y Setters para conectar cómodamente la vista
+  get selectedTarget() {
+    return this.managementForm.selectedTarget().value();
+  }
+  set selectedTarget(val: string) {
+    this.managementForm.selectedTarget().value.set(val);
+  }
+
+  get pointsAdjustment() {
+    return this.managementForm.pointsAdjustment().value();
+  }
+  set pointsAdjustment(val: number) {
+    this.managementForm.pointsAdjustment().value.set(val);
+  }
+
+  get justification() {
+    return this.managementForm.justification().value();
+  }
+  set justification(val: string) {
+    this.managementForm.justification().value.set(val);
+  }
 
   saveChanges() {
-    if (!this.isValid() || this.isSaving()) return;
+    if (this.isSaving()) return;
 
-    this.isSaving.set(true);
-    this.pointsService
-      .saveAdjustment({
-        target: this.selectedTarget(),
-        points: this.pointsAdjustment(),
-        justification: this.justification(),
-      })
-      .subscribe({
-        next: () => {
-          this.isSaving.set(false);
-          this.showSuccess.set(true);
-          setTimeout(() => this.showSuccess.set(false), 3000);
-          this.resetForm();
-        },
-        error: () => {
-          this.isSaving.set(false);
-        },
-      });
+    submit(this.managementForm, async () => {
+      this.isSaving.set(true);
+      const data = this.formModel();
+
+      this.pointsService
+        .saveAdjustment({
+          target: data.selectedTarget,
+          points: data.pointsAdjustment,
+          justification: data.justification,
+        })
+        .subscribe({
+          next: () => {
+            this.isSaving.set(false);
+            this.showSuccess.set(true);
+            setTimeout(() => this.showSuccess.set(false), 3000);
+            this.cancel();
+          },
+          error: () => {
+            this.isSaving.set(false);
+          },
+        });
+    });
   }
 
   cancel() {
-    this.resetForm();
-  }
-
-  private resetForm() {
-    this.selectedTarget.set('');
-    this.pointsAdjustment.set(0);
-    this.justification.set('');
+    this.managementForm().reset();
+    this.formModel.set({
+      selectedTarget: '',
+      pointsAdjustment: 0,
+      justification: '',
+    });
   }
 }

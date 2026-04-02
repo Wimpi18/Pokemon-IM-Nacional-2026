@@ -62,25 +62,53 @@
       [options]="targetOptions()"
       [(value)]="selectedTarget"
     />
+    @if (
+      managementForm.selectedTarget().touched() &&
+      managementForm.selectedTarget().invalid()
+    ) {
+      <p class="text-error text-[11px] font-bold mt-1.5 px-1">
+        {{ managementForm.selectedTarget().errors()[0].message }}
+      </p>
+    }
 
     <!-- Point Input -->
-    <app-number-input label="Puntos" [(value)]="pointsAdjustment" />
+    <app-number-input label="Puntos a Otorgar" [(value)]="pointsAdjustment" />
+    @if (
+      managementForm.pointsAdjustment().touched() &&
+      managementForm.pointsAdjustment().invalid()
+    ) {
+      <p class="text-error text-[11px] font-bold mt-1.5 px-1">
+        {{ managementForm.pointsAdjustment().errors()[0].message }}
+      </p>
+    }
 
     <!-- Justification Area -->
     <app-textarea-field
-      label="Justificación (Obligatoria)"
-      placeholder="Describe el motivo de este puntaje (ej., 'Ganaron el juego del módulo' o 'Faltó al módulo')..."
-      [rows]="4"
+      label="Justificación"
+      placeholder="Razón de los puntos..."
+      [rows]="3"
       [(value)]="justification"
+      [error]="
+        managementForm.justification().touched() &&
+        managementForm.justification().invalid()
+      "
     />
+    @if (
+      managementForm.justification().touched() &&
+      managementForm.justification().invalid()
+    ) {
+      <p class="text-error text-[11px] font-bold mt-1.5 px-1">
+        {{ managementForm.justification().errors()[0].message }}
+      </p>
+    }
   </section>
 
   <!-- Form Actions -->
   <div class="flex gap-3 pt-2">
     <app-button
-      variant="destructive"
+      variant="primary"
       (click)="saveChanges()"
-      [isDisabled]="!isValid() || isSaving()"
+      [isDisabled]="managementForm().invalid() || isSaving()"
       customClass="gap-2"
     >
       @if (isSaving()) {
