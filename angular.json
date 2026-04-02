@@ -10,7 +10,7 @@
   "projects": {
     "Pokemon-IM-Nacional-2026": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": { "@schematics/angular:component": { "style": "none" } },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
