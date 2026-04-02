@@ -4,10 +4,12 @@ import { PointsAdjustment } from './points-adjustment.model';
 import { FirebaseService } from '../core/services/firebase.service';
 import { PointTransaction } from '../core/models/firebase.models';
 import { Timestamp } from '@angular/fire/firestore';
+import { AuthService } from '../core/services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class PointsService {
   private firebaseService = inject(FirebaseService);
+  private authService = inject(AuthService);
 
   saveAdjustment(data: PointsAdjustment): Observable<void> {
     // 1. Determinar el tipo de objetivo de forma segura mediante prefijos

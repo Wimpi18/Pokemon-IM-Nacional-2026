@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-top-app-bar',
-
   template: `
     <header
       class="sticky top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/20"
@@ -26,11 +27,23 @@ import { Component, input } from '@angular/core';
             {{ title() }}
           </h1>
         </div>
-        <button
-          class="w-9 h-9 rounded-lg hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors duration-200 active:scale-95"
-        >
-          <span class="material-symbols-outlined text-xl">help_outline</span>
-        </button>
+
+        @if (authService.currentUser()) {
+          <div class="flex items-center gap-3">
+            <span
+              class="text-xs font-semibold text-on-surface-variant hidden sm:block"
+            >
+              {{ authService.currentUser()?.email }}
+            </span>
+            <button
+              (click)="onLogout()"
+              class="w-9 h-9 rounded-lg hover:bg-error/10 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors duration-200 active:scale-95"
+              title="Cerrar sesión"
+            >
+              <span class="material-symbols-outlined text-xl">logout</span>
+            </button>
+          </div>
+        }
       </div>
     </header>
   `,
@@ -38,4 +51,12 @@ import { Component, input } from '@angular/core';
 export class TopAppBarComponent {
   title = input<string>('');
   icon = input<string>('capture');
+
+  public authService = inject(AuthService);
+  private router = inject(Router);
+
+  async onLogout() {
+    await this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

@@ -1,0 +1,126 @@
+<main
+  class="min-h-screen flex items-center justify-center bg-surface-container pb-20"
+>
+  <div class="w-full max-w-sm px-6">
+    <div class="mb-10 text-center">
+      <div
+        class="w-20 h-20 bg-primary/20 rounded-2xl mx-auto flex items-center justify-center mb-6"
+      >
+        <span class="material-symbols-outlined text-4xl text-primary"
+          >security</span
+        >
+      </div>
+      <h1 class="text-2xl font-headline font-bold text-on-surface mb-2">
+        Ingresar Dirigente
+      </h1>
+      <p class="text-sm text-on-surface-variant leading-relaxed">
+        Acceso restringido al portal de gestión de puntajes y patrullas de
+        Módulos.
+      </p>
+    </div>
+
+    <!-- Login Form -->
+    <form (submit)="onSubmit($event)" class="space-y-6">
+      @if (errorMessage()) {
+        <div
+          class="bg-error/15 border border-error/30 text-error px-4 py-3 rounded-xl text-sm font-semibold text-center flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined">warning</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Email Field -->
+      <div class="space-y-2">
+        <label
+          for="email-input"
+          class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1"
+        >
+          Correo Electrónico
+        </label>
+        <input
+          id="email-input"
+          name="email"
+          autocomplete="email"
+          type="email"
+          placeholder="ejemplo@scouts.org"
+          [value]="emailField"
+          (input)="emailField = $any($event.target).value"
+          [class]="
+            'w-full bg-surface-container-lowest border px-4 py-3 rounded-xl font-body text-sm leading-relaxed text-on-surface placeholder:text-on-surface-variant/50 transition-all duration-200 outline-none ' +
+            (loginForm.email().touched() && loginForm.email().invalid()
+              ? 'border-error ring-2 ring-error/15 focus:border-error focus:ring-error/25'
+              : 'border-outline-variant/30 focus:border-primary focus:ring-2 focus:ring-primary/15')
+          "
+        />
+        @if (loginForm.email().touched() && loginForm.email().invalid()) {
+          <p class="text-error text-[11px] font-bold mt-1.5 px-1">
+            {{ loginForm.email().errors()[0].message }}
+          </p>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="space-y-2">
+        <label
+          for="password-input"
+          class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1"
+        >
+          Contraseña
+        </label>
+        <input
+          id="password-input"
+          name="password"
+          autocomplete="current-password"
+          type="password"
+          placeholder="••••••••"
+          [value]="passwordField"
+          (input)="passwordField = $any($event.target).value"
+          [class]="
+            'w-full bg-surface-container-lowest border px-4 py-3 rounded-xl font-body text-sm leading-relaxed text-on-surface placeholder:text-on-surface-variant/50 transition-all duration-200 outline-none ' +
+            (loginForm.password().touched() && loginForm.password().invalid()
+              ? 'border-error ring-2 ring-error/15 focus:border-error focus:ring-error/25'
+              : 'border-outline-variant/30 focus:border-primary focus:ring-2 focus:ring-primary/15')
+          "
+        />
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+          <p class="text-error text-[11px] font-bold mt-1.5 px-1">
+            {{ loginForm.password().errors()[0].message }}
+          </p>
+        }
+      </div>
+
+      <div class="pt-4">
+        <!-- Hidden real submit button so Enter key works -->
+        <button
+          type="submit"
+          class="hidden"
+          aria-hidden="true"
+          tabindex="-1"
+          [disabled]="loginForm().invalid() || isLoading()"
+        >
+          Hidden Submit
+        </button>
+
+        <app-button
+          (click)="onSubmit($event)"
+          variant="primary"
+          [isDisabled]="loginForm().invalid() || isLoading()"
+          customClass="w-full py-4 text-sm font-bold gap-2"
+        >
+          @if (isLoading()) {
+            <span
+              class="material-symbols-outlined text-lg animate-spin"
+              style="animation-direction: normal"
+              >progress_activity</span
+            >
+            Comprobando...
+          } @else {
+            Ingresar
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          }
+        </app-button>
+      </div>
+    </form>
+  </div>
+</main>
