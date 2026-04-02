@@ -36,6 +36,5 @@ export interface PointTransaction {
   authorId: string;
   authorName: string;
   timestamp: Timestamp;
-  dateString: string; // "YYYY-MM-DD"
   searchTerms: string[];
 }

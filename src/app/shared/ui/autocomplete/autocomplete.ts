@@ -56,10 +56,13 @@ export class AutocompleteComponent implements DoCheck {
     return match ? match.label : '';
   }
 
+  private lastValue = '';
+  private skipNextCheck = false;
+
   onFocus() {
     this.isOpen.set(true);
     this.highlightedIndex.set(-1);
-    // If there's a selected value, show all options on focus
+    // If there's a selected value, show all options on focus by clearing search text temporarily
     if (this.value()) {
       this.searchText.set('');
     }
@@ -71,11 +74,13 @@ export class AutocompleteComponent implements DoCheck {
     this.highlightedIndex.set(-1);
     // Clear the selected value when user starts typing
     if (this.value()) {
-      this.value.set('');
+      this.skipNextCheck = true;
+      this.value.set(''); // This will trigger ngDoCheck externally
     }
   }
 
   selectOption(option: AutocompleteOption) {
+    this.skipNextCheck = true;
     this.value.set(option.value);
     this.searchText.set(option.label);
     this.isOpen.set(false);
@@ -128,13 +133,22 @@ export class AutocompleteComponent implements DoCheck {
     }
   }
 
-  /** Sync searchText when value changes externally (e.g. reset) */
+  /** Sync searchText when value changes externally (e.g. form reset) */
   ngDoCheck() {
     const currentVal = this.value();
-    if (!currentVal && this.searchText()) {
-      this.searchText.set('');
-    } else if (currentVal && !this.searchText()) {
-      this.searchText.set(this.resolveLabel(currentVal));
+    if (currentVal !== this.lastValue) {
+      if (this.skipNextCheck) {
+        this.skipNextCheck = false;
+        this.lastValue = currentVal;
+        return;
+      }
+      this.lastValue = currentVal;
+
+      if (currentVal) {
+        this.searchText.set(this.resolveLabel(currentVal));
+      } else {
+        this.searchText.set('');
+      }
     }
   }
 }

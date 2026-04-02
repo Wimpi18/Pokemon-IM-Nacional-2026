@@ -56,12 +56,40 @@
   <!-- Management Form -->
   <section class="space-y-5">
     <!-- Dropdown Selection -->
-    <app-autocomplete
-      label="Seleccionar Patrulla o Cursante"
-      placeholder="Buscar patrulla o cursante..."
-      [options]="targetOptions()"
-      [(value)]="selectedTarget"
-    />
+    @if (!targetsLoaded()) {
+      <div class="h-18.25 flex flex-col gap-1.5">
+        <div
+          class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1"
+        >
+          Seleccionar Patrulla o Cursante
+        </div>
+        <div
+          class="h-12.5 w-full rounded-xl bg-surface-container-low px-4 flex items-center text-on-surface-variant/60 text-sm animate-pulse"
+        >
+          Cargando patrullas y cursantes de tu curso...
+        </div>
+      </div>
+    } @else if (targetOptions().length > 0) {
+      <app-autocomplete
+        label="Seleccionar Patrulla o Cursante"
+        placeholder="Buscar patrulla o cursante..."
+        [options]="targetOptions()"
+        [(value)]="selectedTarget"
+      />
+    } @else {
+      <div class="h-18.25 flex flex-col gap-1.5">
+        <div
+          class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1"
+        >
+          Seleccionar Patrulla o Cursante
+        </div>
+        <div
+          class="h-12.5 w-full rounded-xl bg-error/10 border border-error/20 px-4 flex items-center text-error text-sm font-medium"
+        >
+          No se encontraron patrullas ni cursantes registrados bajo tu curso.
+        </div>
+      </div>
+    }
     @if (
       managementForm.selectedTarget().touched() &&
       managementForm.selectedTarget().invalid()

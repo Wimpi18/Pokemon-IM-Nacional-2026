@@ -39,6 +39,22 @@ export class ParticipantService {
   }
 
   /**
+   * Obtiene los cursantes registrados bajo el mismo curso.
+   */
+  async getCourseCursantes(course: string): Promise<Cursante[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'cursante'),
+      where('course', '==', course),
+    );
+    const sn = await getDocs(q);
+
+    return sn.docs.map((d) => {
+      return d.data() as Cursante;
+    });
+  }
+
+  /**
    * Registra un nuevo cursante usando una "Secondary App".
    * Esto impide que el método createUserWithEmailAndPassword destruya
    * la sesión activa del Dirigente que lo está registrando.

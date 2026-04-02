@@ -1,5 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { form, required, submit, validate } from '@angular/forms/signals';
 import {
@@ -10,7 +9,8 @@ import {
   type AutocompleteOption,
 } from '../../shared/ui';
 import { PointsService } from '../points.service';
-import { FirebaseService } from '../../core/services/firebase.service';
+import { AuthService } from '../../core/services/auth.service';
+import { ParticipantService } from '../../participants-management/participant.service';
 
 @Component({
   selector: 'app-points-management',
@@ -26,22 +26,45 @@ import { FirebaseService } from '../../core/services/firebase.service';
 })
 export class PointsManagement {
   private readonly pointsService = inject(PointsService);
-  private readonly firebaseService = inject(FirebaseService);
+  private readonly authService = inject(AuthService);
+  private readonly participantService = inject(ParticipantService);
 
-  // 1. Nos suscribimos a Firebase y lo convertimos a una Signal nativa de Angular
-  private patrols = toSignal(this.firebaseService.listPatrols(), {
-    initialValue: [],
-  });
+  readonly targetOptions = signal<AutocompleteOption[]>([]);
+  readonly targetsLoaded = signal<boolean>(false);
 
-  // 2. Mapeamos las patrullas reales
-  targetOptions = computed<AutocompleteOption[]>(() => {
-    const firestorePatrols = this.patrols().map((p) => ({
-      value: `patrulla:${p.id}`, // Prefijo identificador
-      label: `Patrulla ${p.name} (${p.course})`,
-    }));
+  constructor() {
+    effect(() => {
+      const profile = this.authService.userProfile();
+      if (profile?.course) {
+        this.loadCourseTargets(profile.course);
+      }
+    });
+  }
 
-    return firestorePatrols;
-  });
+  async loadCourseTargets(course: string) {
+    this.targetsLoaded.set(false);
+    try {
+      const patrols = await this.participantService.getCoursePatrols(course);
+      const cursantes =
+        await this.participantService.getCourseCursantes(course);
+
+      const formattedPatrols = patrols.map((p) => ({
+        value: `patrulla:${p.id}`,
+        label: `Patrulla ${p.name} (${p.course})`,
+      }));
+
+      const formattedCursantes = cursantes.map((c) => ({
+        value: `cursante:${c.uid}`,
+        label: `Cursante ${c.realName} (${c.nickname || 'Sin Apodo'})`,
+      }));
+
+      this.targetOptions.set([...formattedPatrols, ...formattedCursantes]);
+    } catch (e) {
+      console.error('Error fetching targets:', e);
+    } finally {
+      this.targetsLoaded.set(true);
+    }
+  }
 
   // 1. Modelo fuente de verdad
   formModel = signal({
