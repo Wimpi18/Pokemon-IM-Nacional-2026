@@ -3,7 +3,7 @@ import {
   Firestore,
   collection,
   doc,
-  runTransaction,
+  addDoc,
   query,
   orderBy,
   onSnapshot,
@@ -63,29 +63,18 @@ export class FirebaseService {
     });
   }
 
+  /**
+   * Registra una transacción de puntos.
+   * El puntaje total de la patrulla se calcula dinámicamente desde point_transactions,
+   * así que aquí solo insertamos el documento.
+   */
   async addPointTransaction(
     transaction: Omit<PointTransaction, 'id'>,
   ): Promise<void> {
-    const patrolRef = doc(this.firestore, `patrols/${transaction.patrolId}`);
     const transactionsRef = collection(this.firestore, 'point_transactions');
 
     try {
-      await runTransaction(this.firestore, async (firestoreTransaction) => {
-        const patrolDoc = await firestoreTransaction.get(patrolRef);
-        if (!patrolDoc.exists()) {
-          throw new Error('¡La patrulla no existe!');
-        }
-
-        const currentScore = patrolDoc.data()['totalScore'] || 0;
-        const newScore = currentScore + transaction.points;
-
-        // 2. Transacción de actualización a la patrulla
-        firestoreTransaction.update(patrolRef, { totalScore: newScore });
-
-        // 3. Crear el documento de la transacción de puntos
-        const newTransactionRef = doc(transactionsRef); // Autogenera un nuevo ID
-        firestoreTransaction.set(newTransactionRef, transaction);
-      });
+      await addDoc(transactionsRef, transaction);
       console.log('Transacción de puntos registrada con éxito.');
     } catch (error) {
       console.error('Error en la transacción de puntos: ', error);

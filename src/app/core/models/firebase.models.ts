@@ -23,7 +23,6 @@ export interface Patrol {
   id: string;
   name: string;
   course: string;
-  totalScore: number;
 }
 
 export interface PointTransaction {

@@ -1,10 +1,9 @@
-import { Component, inject, computed, signal, effect } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, computed, signal } from '@angular/core';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService, RankedPatrol } from '../leaderboard.service';
 import { Cursante } from '../../core/models/firebase.models';
-import { switchMap, of } from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-tablero',
@@ -36,13 +35,16 @@ export class TableroComponent {
   private readonly rankedPatrols$ = toObservable(this.profile).pipe(
     switchMap((p) => {
       if (p?.course) {
+        this.isLoading.set(true);
         return this.leaderboardService.getRankedPatrols(
           p.course,
           this.currentPatrolId(),
         );
       }
+      this.isLoading.set(false);
       return of([]);
     }),
+    tap(() => this.isLoading.set(false)),
   );
 
   readonly rankedPatrols = toSignal(this.rankedPatrols$, {
@@ -77,15 +79,6 @@ export class TableroComponent {
 
     return groups;
   });
-
-  constructor() {
-    effect(() => {
-      const patrols = this.rankedPatrols();
-      if (patrols.length > 0 || !this.profile()?.course) {
-        this.isLoading.set(false);
-      }
-    });
-  }
 
   /** Rank-specific styling helpers */
   getRankBorderColor(rank: number): string {
