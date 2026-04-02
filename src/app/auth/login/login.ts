@@ -58,8 +58,13 @@ export class LoginComponent {
       const { email, password } = this.loginModel();
 
       try {
-        await this.authService.loginEmail(email, password);
-        this.router.navigate(['/']); // Redirigir al gestor principal
+        const result = await this.authService.loginEmail(email, password);
+        const profile = result.profile;
+        if (profile && profile.role === 'dirigente') {
+          this.router.navigate(['/gestion-de-puntos']);
+        } else {
+          this.router.navigate(['/perfil']);
+        }
       } catch (err) {
         const error = err as Error;
         this.isLoading.set(false);

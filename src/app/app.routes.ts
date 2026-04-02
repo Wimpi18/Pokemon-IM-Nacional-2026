@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AppShellComponent } from './core/layout/app-shell';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'gestion-de-puntos',
+        canActivate: [roleGuard],
+        data: { roles: ['dirigente'] },
         loadComponent: () =>
           import('./points-management/points-management/points-management').then(
             (m) => m.PointsManagement,
@@ -22,13 +25,20 @@ export const routes: Routes = [
       },
       {
         path: 'registrar-cursante',
+        canActivate: [roleGuard],
+        data: { roles: ['dirigente'] },
         loadComponent: () =>
           import('./participants-management/participant-registration/participant-registration').then(
             (m) => m.ParticipantRegistrationComponent,
           ),
       },
-      { path: '', redirectTo: 'gestion-de-puntos', pathMatch: 'full' },
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./core/profile/profile').then((m) => m.ProfileComponent),
+      },
+      { path: '', redirectTo: 'perfil', pathMatch: 'full' },
     ],
   },
-  { path: '**', redirectTo: 'gestion-de-puntos' },
+  { path: '**', redirectTo: 'perfil' },
 ];

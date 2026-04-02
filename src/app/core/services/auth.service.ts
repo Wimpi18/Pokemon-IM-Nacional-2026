@@ -56,8 +56,10 @@ export class AuthService {
     });
   }
 
-  /** Iniciar sesión con Correo del Dirigente */
-  async loginEmail(email: string, password: string): Promise<UserCredential> {
+  async loginEmail(
+    email: string,
+    password: string,
+  ): Promise<{ credential: UserCredential; profile: UserProfile }> {
     try {
       const credential = await signInWithEmailAndPassword(
         this.auth,
@@ -66,22 +68,17 @@ export class AuthService {
       );
       const user = credential.user;
 
-      // Validar inmediatamente si es Dirigente antes de dejarlo entrar
+      // Validar si existe Perfil Oficial
       const docRef = doc(this.firestore, 'users', user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const profile = docSnap.data() as UserProfile;
-        if (profile.role !== 'dirigente') {
-          await this.logout();
-          throw new Error('access-denied');
-        }
+        return { credential, profile };
       } else {
         await this.logout();
         throw new Error('not-found');
       }
-
-      return credential;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
