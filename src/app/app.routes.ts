@@ -24,6 +24,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'tablero',
+        loadComponent: () =>
+          import('./leaderboard/tablero/tablero').then(
+            (m) => m.TableroComponent,
+          ),
+      },
+      {
         path: 'registrar-cursante',
         canActivate: [roleGuard],
         data: { roles: ['dirigente'] },

@@ -32,7 +32,10 @@ export class BottomNavBarComponent {
         { path: '/perfil', icon: 'account_circle', label: 'Perfil' },
       ];
     } else if (role === 'cursante') {
-      return [{ path: '/perfil', icon: 'account_circle', label: 'Perfil' }];
+      return [
+        { path: '/tablero', icon: 'leaderboard', label: 'Tablero' },
+        { path: '/perfil', icon: 'account_circle', label: 'Perfil' },
+      ];
     }
 
     return [];
