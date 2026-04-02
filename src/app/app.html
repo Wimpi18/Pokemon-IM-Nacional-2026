@@ -1,4 +1,6 @@
-<main class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 font-sans">
+<main
+  class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 font-sans"
+>
   <div
     class="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100"
   >
@@ -6,27 +8,39 @@
       class="p-10 md:p-16 flex flex-col justify-center w-full md:w-1/2 bg-linear-to-br from-red-500 via-pink-500 to-purple-600 text-white"
     >
       <div class="mb-8">
-        <svg class="w-16 h-16 text-white/90" viewBox="0 0 24 24" fill="currentColor">
+        <svg
+          class="w-16 h-16 text-white/90"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
           <path
             d="M12 2.5L22.5 6L20.5 17.5L12 22L3.5 17.5L1.5 6L12 2.5ZM12 4.5L4 7.5L5.5 16L12 19L18.5 16L20 7.5L12 4.5Z"
           />
-          <path d="M12 6L16.5 15H14.5L13.5 13H10.5L9.5 15H7.5L12 6ZM12 8.5L11 11H13L12 8.5Z" />
+          <path
+            d="M12 6L16.5 15H14.5L13.5 13H10.5L9.5 15H7.5L12 6ZM12 8.5L11 11H13L12 8.5Z"
+          />
         </svg>
       </div>
       <h1 class="text-5xl font-black tracking-tight mb-4 leading-none">
         Hello, <br /><span class="text-white/90">{{ title() }}</span>
       </h1>
       <p class="text-lg text-white/80 font-medium leading-relaxed">
-        ¡Felicidades! Tu aplicación está funcionando usando únicamente clases de Tailwind CSS. 🎉
+        ¡Felicidades! Tu aplicación está funcionando usando únicamente clases de
+        Tailwind CSS. 🎉
       </p>
     </div>
 
-    <div class="p-10 md:p-16 w-full md:w-1/2 flex flex-col justify-center bg-white">
+    <div
+      class="p-10 md:p-16 w-full md:w-1/2 flex flex-col justify-center bg-white"
+    >
       <div class="flex flex-col gap-4">
         @for (
           item of [
             { title: 'Explore the Docs', link: 'https://angular.dev' },
-            { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
+            {
+              title: 'Learn with Tutorials',
+              link: 'https://angular.dev/tutorials',
+            },
             {
               title: 'Prompt and best practices for AI',
               link: 'https://angular.dev/ai/develop-with-ai',
