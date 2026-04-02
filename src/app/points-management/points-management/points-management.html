@@ -10,7 +10,7 @@
         >check_circle</span
       >
       <span class="font-headline font-bold text-sm"
-        >Ajuste guardado exitosamente</span
+        >Puntos guardados exitosamente</span
       >
     </div>
   }
@@ -59,7 +59,7 @@
     <app-autocomplete
       label="Seleccionar Patrulla o Cursante"
       placeholder="Buscar patrulla o cursante..."
-      [options]="targetOptions"
+      [options]="targetOptions()"
       [(value)]="selectedTarget"
     />
 

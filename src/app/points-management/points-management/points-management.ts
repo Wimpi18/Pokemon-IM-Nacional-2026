@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import {
   ButtonComponent,
@@ -8,6 +9,7 @@ import {
   type AutocompleteOption,
 } from '../../shared/ui';
 import { PointsService } from '../points.service';
+import { FirebaseService } from '../../core/services/firebase.service';
 
 @Component({
   selector: 'app-points-management',
@@ -23,14 +25,22 @@ import { PointsService } from '../points.service';
 })
 export class PointsManagement {
   private readonly pointsService = inject(PointsService);
+  private readonly firebaseService = inject(FirebaseService);
 
-  targetOptions: AutocompleteOption[] = [
-    { value: 'escuadron_charizard', label: 'Escuadrón Charizard (Patrulla)' },
-    { value: 'batallon_blastoise', label: 'Batallón Blastoise (Patrulla)' },
-    { value: 'ash', label: 'Ash Ketchum (Cursante)' },
-    { value: 'gary', label: 'Gary Oak (Cursante)' },
-    { value: 'misty', label: 'Misty Williams (Cursante)' },
-  ];
+  // 1. Nos suscribimos a Firebase y lo convertimos a una Signal nativa de Angular
+  private patrols = toSignal(this.firebaseService.listPatrols(), {
+    initialValue: [],
+  });
+
+  // 2. Mapeamos las patrullas reales
+  targetOptions = computed<AutocompleteOption[]>(() => {
+    const firestorePatrols = this.patrols().map((p) => ({
+      value: `patrulla:${p.id}`, // Prefijo identificador
+      label: `Patrulla ${p.name} (${p.course})`,
+    }));
+
+    return firestorePatrols;
+  });
 
   selectedTarget = signal<string>('');
   pointsAdjustment = signal<number>(0);
