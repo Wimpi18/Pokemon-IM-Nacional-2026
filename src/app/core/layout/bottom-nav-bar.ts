@@ -28,7 +28,6 @@ export class BottomNavBarComponent {
         },
         { path: '/tablero', icon: 'leaderboard', label: 'Tablero' },
         { path: '/registrar-cursante', icon: 'person_add', label: 'Inscribir' },
-        { path: '/patrulla', icon: 'explore', label: 'Patrulla' },
         { path: '/perfil', icon: 'account_circle', label: 'Perfil' },
       ];
     } else if (role === 'cursante') {

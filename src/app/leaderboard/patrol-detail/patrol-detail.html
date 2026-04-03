@@ -63,7 +63,7 @@
         <h3
           class="font-headline text-xl font-extrabold text-on-surface uppercase tracking-tight"
         >
-          Movimientos
+          Historial de puntos
         </h3>
         <div class="h-1 w-20 bg-tertiary rounded-full"></div>
       </div>
@@ -88,7 +88,7 @@
         >
         <input
           type="text"
-          placeholder="Buscar justificación o dirigente..."
+          placeholder="Buscar justificación o por dirigente del equipo de dirección..."
           [value]="searchText()"
           (input)="onSearchInput($event)"
           class="h-12 w-full rounded-xl bg-surface-container-lowest pl-10 pr-4 text-sm text-on-surface outline-none border border-transparent transition-all focus:border-tertiary/50 focus:ring-2 focus:ring-tertiary/20 placeholder:text-on-surface-variant/40"
@@ -166,7 +166,7 @@
       >
       @if (activeFilters() > 0) {
         <p class="text-sm text-on-surface-variant/60 font-medium">
-          No se encontraron movimientos con esos filtros.
+          No se encontraron historial de puntos con esos filtros.
         </p>
         <button
           (click)="clearFilters()"
@@ -176,7 +176,7 @@
         </button>
       } @else {
         <p class="text-sm text-on-surface-variant/60 font-medium">
-          Esta patrulla aún no tiene movimientos de puntos.
+          Esta patrulla aún no tiene historial de puntos.
         </p>
       }
     </div>
