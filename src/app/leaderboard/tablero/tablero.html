@@ -1,7 +1,9 @@
-<main class="max-w-2xl mx-auto px-5 pt-6 pb-28 space-y-6">
+<main
+  class="max-w-2xl mx-auto px-5 pt-6 pb-28 space-y-6 bg-poke-mesh min-h-screen"
+>
   <!-- Hero Card -->
   <div
-    class="relative overflow-hidden rounded-2xl p-6 shadow-lg bg-linear-to-br from-primary to-secondary"
+    class="relative overflow-hidden rounded-2xl p-6 shadow-xl bg-poke-gradient"
   >
     <div
       class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"
@@ -10,10 +12,10 @@
       class="absolute -left-8 -bottom-8 w-28 h-28 bg-white/5 rounded-full blur-2xl"
     ></div>
 
-    <div class="relative z-10 flex items-center justify-between">
+    <div class="relative z-10 flex items-center justify-between text-white">
       <div class="space-y-1">
         <span
-          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/15 text-white/90 text-[10px] font-bold uppercase tracking-widest"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest border border-white/10"
         >
           <span
             class="material-symbols-outlined text-sm"
@@ -23,19 +25,19 @@
           Ranking
         </span>
         <h2
-          class="text-2xl sm:text-3xl font-headline font-extrabold text-white leading-tight"
+          class="text-2xl sm:text-3xl font-headline font-extrabold leading-tight mt-2"
         >
-          Tablero de posiciones
+          POKÉDEX
         </h2>
-        <p class="text-xs text-white/70 font-body mt-1">
+        <p class="text-xs text-white/80 font-body mt-1">
           {{ profile()?.course || 'Cargando curso...' }}
         </p>
       </div>
       <div
-        class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0"
+        class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20 shadow-inner"
       >
         <span
-          class="material-symbols-outlined text-white text-4xl"
+          class="material-symbols-outlined text-white text-4xl animate-pulse"
           style="font-variation-settings: 'FILL' 1"
           >trophy</span
         >
@@ -45,24 +47,20 @@
 
   <!-- My Patrol Quick View (Cursantes only) -->
   @if (myPatrol(); as mine) {
-    <section
-      class="relative overflow-hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-5 shadow-sm"
-    >
+    <section class="poke-panel p-5">
       <div
-        class="absolute -bottom-4 -right-4 w-24 h-24 bg-tertiary/5 rounded-full blur-2xl"
+        class="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"
       ></div>
       <div class="relative z-10 flex justify-between items-start">
         <div>
-          <p
-            class="font-label text-[10px] font-bold text-tertiary uppercase tracking-widest"
-          >
-            Tu Patrulla
-          </p>
-          <h4 class="font-headline text-xl font-extrabold text-on-surface mt-1">
+          <span class="poke-tag bg-primary/10 text-primary">Tu Patrulla</span>
+          <h4 class="font-headline text-xl font-extrabold text-on-surface mt-2">
             {{ mine.name }}
           </h4>
         </div>
-        <div class="bg-tertiary/10 text-tertiary p-2.5 rounded-xl">
+        <div
+          class="bg-primary/20 text-primary p-2.5 rounded-2xl border border-primary/10"
+        >
           <span
             class="material-symbols-outlined text-xl"
             style="font-variation-settings: 'FILL' 1"
@@ -71,9 +69,11 @@
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3 mt-4">
-        <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <div
+          class="bg-surface-container-low/80 p-3 rounded-xl border border-outline-variant/10"
+        >
           <span
-            class="font-label text-[9px] uppercase font-bold text-on-surface-variant tracking-widest"
+            class="font-label text-[9px] uppercase font-bold text-on-surface-variant/60 tracking-widest"
             >Posición</span
           >
           <p
@@ -82,9 +82,11 @@
             {{ getRankLabel(mine.rank) }}
           </p>
         </div>
-        <div class="bg-surface-container-low/60 p-3 rounded-xl">
+        <div
+          class="bg-surface-container-low/80 p-3 rounded-xl border border-outline-variant/10"
+        >
           <span
-            class="font-label text-[9px] uppercase font-bold text-on-surface-variant tracking-widest"
+            class="font-label text-[9px] uppercase font-bold text-on-surface-variant/60 tracking-widest"
             >Puntos</span
           >
           <p class="font-headline font-extrabold text-2xl text-primary mt-0.5">
@@ -103,97 +105,55 @@
       >
         Clasificación
       </h3>
-      <div class="h-1 w-20 bg-primary rounded-full"></div>
+      <div class="h-1.5 w-16 bg-primary rounded-full shadow-sm"></div>
     </div>
     @if (rankedPatrols().length > 0) {
       <span
-        class="font-label text-[10px] font-bold text-on-tertiary uppercase bg-tertiary py-1 px-3 rounded-full"
+        class="font-label text-[10px] font-bold text-white uppercase bg-secondary py-1 px-4 rounded-full shadow-sm"
       >
-        {{ rankedPatrols().length }}
-        {{ rankedPatrols().length === 1 ? 'patrulla' : 'patrullas' }}
+        {{ rankedPatrols().length }} Equipos
       </span>
     }
   </div>
 
-  <!-- Loading State -->
+  <!-- Ranked Groups -->
   @if (isLoading()) {
-    <div class="space-y-3">
+    <div class="space-y-4">
       @for (i of [1, 2, 3]; track i) {
         <div
-          class="h-20 w-full rounded-xl bg-surface-container-low animate-pulse"
+          class="h-24 w-full rounded-2xl bg-surface-container-low animate-pulse"
         ></div>
       }
     </div>
-  } @else if (rankedPatrols().length === 0) {
-    <!-- Empty State -->
-    <div
-      class="flex flex-col items-center justify-center py-12 text-center gap-3"
-    >
-      <span
-        class="material-symbols-outlined text-5xl text-on-surface-variant/30"
-        >emoji_events</span
-      >
-      <p class="text-sm text-on-surface-variant/60 font-medium">
-        Aún no hay patrullas registradas en tu curso.
-      </p>
-    </div>
   } @else {
-    <!-- Ranked Groups -->
-    <section class="space-y-4">
+    <section class="space-y-6">
       @for (group of groupedByRank(); track group.rank) {
-        <div class="space-y-3">
+        <div class="space-y-4">
           <!-- Rank Header -->
-          <div class="flex items-center gap-2 px-1">
+          <div class="flex items-center gap-3 px-1">
             <span
-              class="font-headline font-extrabold text-base"
+              class="font-headline font-black text-lg tracking-tighter"
               [class]="getScoreColor(group.rank)"
             >
-              {{ getRankLabel(group.rank) }} Lugar
+              #{{ group.rank }}
             </span>
-            <span
-              class="h-px flex-1"
-              [class]="group.rank <= 2 ? 'bg-secondary/20' : 'bg-on-surface/10'"
-            ></span>
-            @if (group.patrols.length > 1) {
-              <span
-                class="font-label text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-widest"
-              >
-                Empate
-              </span>
-            }
+            <span class="h-px flex-1 bg-outline-variant/20"></span>
           </div>
 
-          <!-- Patrol Cards in this rank group -->
-          <div
-            [class]="group.patrols.length > 1 ? 'grid grid-cols-1 gap-3' : ''"
-          >
-            @for (patrol of group.patrols; track patrol.id; let i = $index) {
+          <!-- Patrol Cards -->
+          <div class="space-y-3">
+            @for (patrol of group.patrols; track patrol.id) {
               <a
                 [routerLink]="['/tablero', patrol.id]"
-                class="relative flex items-center p-4 rounded-xl shadow-sm border-l-[6px] overflow-hidden transition-all duration-200 cursor-pointer active:scale-[0.98] no-underline"
+                class="poke-panel flex items-center p-4 border-l-8 no-underline group"
                 [class]="
                   getRankBorderColor(group.rank) +
-                  (patrol.isCurrentUserPatrol
-                    ? ' bg-tertiary/5 ring-1 ring-tertiary/20'
-                    : ' bg-surface-container-lowest')
+                  (patrol.isCurrentUserPatrol ? ' bg-primary/5' : '')
                 "
               >
-                <!-- Decorative background icon for top 3 -->
-                @if (group.rank <= 3) {
-                  <div
-                    class="absolute right-0 top-0 opacity-[0.04] translate-x-4 -translate-y-4"
-                  >
-                    <span
-                      class="material-symbols-outlined"
-                      style="font-size: 5rem; font-variation-settings: 'FILL' 1"
-                      >{{ getRankIcon(group.rank) }}</span
-                    >
-                  </div>
-                }
-
-                <!-- Rank Icon -->
+                <!-- Rank Icon Circle -->
                 <div
-                  class="w-12 h-12 rounded-lg flex items-center justify-center mr-4 shrink-0"
+                  class="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shrink-0 shadow-inner"
                   [class]="getRankIconBg(group.rank)"
                 >
                   <span
@@ -207,43 +167,38 @@
                 <!-- Info -->
                 <div class="flex-1 min-w-0">
                   <h4
-                    class="font-headline font-bold text-base text-on-surface truncate"
+                    class="font-headline font-bold text-base text-on-surface group-hover:text-primary transition-colors truncate"
                   >
                     {{ patrol.name }}
+                  </h4>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span
+                      class="font-label text-[9px] text-on-surface-variant/50 uppercase tracking-widest"
+                    >
+                      {{ patrol.course }}
+                    </span>
                     @if (patrol.isCurrentUserPatrol) {
                       <span
-                        class="inline-flex items-center ml-1.5 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-tertiary/15 text-tertiary align-middle"
+                        class="poke-tag bg-primary/20 text-primary scale-75 origin-left"
+                        >Tú</span
                       >
-                        Tú
-                      </span>
                     }
-                  </h4>
-                  <p
-                    class="font-label text-[10px] text-on-surface-variant/70 uppercase tracking-widest mt-0.5"
-                  >
-                    {{ patrol.course }}
-                  </p>
+                  </div>
                 </div>
 
-                <!-- Score + Chevron -->
-                <div class="flex items-center gap-2 shrink-0 ml-3">
-                  <div class="text-right">
-                    <span
-                      class="block font-headline font-black text-xl"
-                      [class]="getScoreColor(group.rank)"
-                    >
-                      {{ patrol.totalScore }}
-                    </span>
-                    <span
-                      class="font-label text-[9px] font-bold text-on-surface-variant/60 uppercase"
-                    >
-                      pts
-                    </span>
-                  </div>
+                <!-- Score -->
+                <div class="text-right ml-3">
                   <span
-                    class="material-symbols-outlined text-on-surface-variant/30 text-lg"
-                    >chevron_right</span
+                    class="block font-headline font-black text-2xl leading-none"
+                    [class]="getScoreColor(group.rank)"
                   >
+                    {{ patrol.totalScore }}
+                  </span>
+                  <span
+                    class="font-label text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest"
+                  >
+                    puntos
+                  </span>
                 </div>
               </a>
             }

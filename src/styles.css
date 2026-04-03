@@ -1,87 +1,83 @@
 @import 'tailwindcss';
 
 @theme {
-  /* ——— Primary (Red Brand) ——— */
-  --color-primary: #ba0018;
-  --color-primary-dim: #a40014;
-  --color-primary-container: #ff766d;
-  --color-primary-fixed: #ff766d;
-  --color-primary-fixed-dim: #ff5a54;
+  /* ——— Pokémon Inspired Palette ——— */
+  /* Blue/Cyan (Principal) */
+  --color-primary: #50b5c3;
+  --color-primary-dim: #339098;
+  --color-primary-container: #daeef1;
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #4f0005;
-  --color-on-primary-fixed: #000000;
-  --color-on-primary-fixed-variant: #600007;
-  --color-inverse-primary: #ff544f;
+  --color-on-primary-container: #002022;
 
-  /* ——— Secondary (Burnt Orange) ——— */
-  --color-secondary: #9e3d00;
-  --color-secondary-dim: #8a3400;
-  --color-secondary-container: #ffc5ac;
-  --color-secondary-fixed: #ffc5ac;
-  --color-secondary-fixed-dim: #ffb28f;
+  /* Dark Cyan (Secondary) */
+  --color-secondary: #339098;
+  --color-secondary-dim: #257077;
+  --color-secondary-container: #d6f1f3;
   --color-on-secondary: #ffffff;
-  --color-on-secondary-container: #7d2f00;
-  --color-on-secondary-fixed: #5e2100;
-  --color-on-secondary-fixed-variant: #8c3500;
+  --color-on-secondary-container: #002022;
 
-  /* ——— Tertiary (Teal) ——— */
-  --color-tertiary: #006570;
-  --color-tertiary-dim: #005862;
-  --color-tertiary-container: #8aecfa;
-  --color-tertiary-fixed: #8aecfa;
-  --color-tertiary-fixed-dim: #7bddec;
+  /* Orange (Tertiary / Energy) */
+  --color-tertiary: #ff6700;
+  --color-tertiary-dim: #d15600;
+  --color-tertiary-container: #ffede1;
   --color-on-tertiary: #ffffff;
-  --color-on-tertiary-container: #005760;
-  --color-on-tertiary-fixed: #00434a;
-  --color-on-tertiary-fixed-variant: #00616c;
+  --color-on-tertiary-container: #331200;
 
-  /* ——— Error ——— */
-  --color-error: #b41340;
-  --color-error-dim: #a70138;
-  --color-error-container: #f74b6d;
+  /* Red (Action / Danger) */
+  --color-error: #ff3f3f;
+  --color-error-dim: #d12c2c;
+  --color-error-container: #ffeceb;
   --color-on-error: #ffffff;
-  --color-on-error-container: #510017;
+  --color-on-error-container: #410002;
 
-  /* ——— Neutrals / Surfaces ——— */
-  --color-background: #f6fbfc;
-  --color-on-background: #14292b;
-  --color-surface: #f6fbfc;
-  --color-surface-dim: #d6ecee;
-  --color-surface-bright: #f6fbfc;
-  --color-surface-variant: #dce9eb;
-  --color-surface-tint: #ba0018;
-  --color-on-surface: #14292b;
-  --color-on-surface-variant: #3d5456;
-  --color-inverse-surface: #001113;
-  --color-inverse-on-surface: #cce3e6;
+  /* Green (Growth / Success) */
+  --color-success: #67c34a;
+  --color-success-dim: #4fa135;
+  --color-success-container: #eef8eb;
+  --color-on-success: #ffffff;
+  --color-on-success-container: #0f3000;
 
-  /* Surface containers — neutral tinted scale */
+  /* ——— Neutrals / Surfaces (Soft Blue Tint) ——— */
+  --color-background: #f4f9fa;
+  --color-on-background: #191c1d;
+  --color-surface: #f4f9fa;
+  --color-surface-dim: #d5dbdc;
+  --color-surface-bright: #f4f9fa;
+  --color-surface-variant: #dae4e6;
+  --color-surface-tint: #50b5c3;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #3f484a;
+  --color-inverse-surface: #2d3132;
+  --color-inverse-on-surface: #eff1f2;
+
+  /* Surface containers */
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #eef6f7;
-  --color-surface-container: #e8f1f3;
-  --color-surface-container-high: #e0ebed;
-  --color-surface-container-highest: #d5e4e6;
+  --color-surface-container-low: #f1f4f5;
+  --color-surface-container: #ebf0f1;
+  --color-surface-container-high: #e5eaeb;
+  --color-surface-container-highest: #dfe5e6;
 
   /* ——— Outlines ——— */
-  --color-outline: #6b8a8d;
-  --color-outline-variant: #bccfd2;
-
-  /* ——— Accent (Orange for points) ——— */
-  --color-accent: #ff6700;
+  --color-outline: #6f797a;
+  --color-outline-variant: #bfc8ca;
 
   /* ——— Typography ——— */
-  --font-headline: 'Plus Jakarta Sans', sans-serif;
-  --font-body: 'Be Vietnam Pro', sans-serif;
-  --font-label: 'Plus Jakarta Sans', sans-serif;
+  --font-headline: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Be Vietnam Pro', 'Inter', sans-serif;
+  --font-label: 'Outfit', sans-serif;
 
-  /* ——— Radius tokens ——— */
-  --radius-sm: 0.5rem;
-  --radius: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.25rem;
-  --radius-xl: 1.5rem;
-  --radius-2xl: 2rem;
+  /* ——— Radius tokens (Softer / Bolder) ——— */
+  --radius-sm: 0.75rem;
+  --radius: 1rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-2xl: 2.5rem;
   --radius-full: 9999px;
+
+  /* ——— Custom Effects ——— */
+  --shadow-poke: 0 4px 0 0 rgba(0, 0, 0, 0.1);
+  --shadow-poke-hover: 0 6px 0 0 rgba(0, 0, 0, 0.15);
 }
 
 @layer base {
@@ -106,13 +102,48 @@
 
   input[type='number'] {
     -moz-appearance: textfield;
+    appearance: textfield;
   }
+
+  /* Custom Scrollbar - Pokemon style */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface-container-lowest);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary-dim);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+  }
+}
+
+/* ——— Pokémon Style Utilities ——— */
+.poke-panel {
+  @apply relative bg-surface-container-lowest rounded-2xl border-b-4 border-r-4 border-outline-variant/30 shadow-sm transition-all duration-200 active:translate-y-0.5 active:border-b-2 active:border-r-2;
+}
+
+.poke-tag {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-bold uppercase tracking-wider text-[10px];
+}
+
+.bg-poke-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.bg-poke-mesh {
+  background-color: var(--color-background);
+  background-image: radial-gradient(var(--color-primary-container) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
 }
 
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,
-    'wght' 400,
+    'wght' 500,
     'GRAD' 0,
     'opsz' 24;
 }
@@ -148,3 +179,4 @@
 .animate-fade-up {
   animation: fade-up 0.4s ease-out both;
 }
+

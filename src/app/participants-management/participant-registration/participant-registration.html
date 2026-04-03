@@ -1,32 +1,30 @@
-<div class="pb-32 px-4 pt-6 bg-surface-lowest">
+<div class="pb-32 px-4 pt-6 bg-poke-mesh min-h-screen">
   <main class="max-w-2xl mx-auto flex flex-col gap-6">
     <!-- Decorative Header -->
-    <div
-      class="relative overflow-hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6 shadow-sm"
-    >
+    <div class="poke-panel p-6 overflow-hidden">
       <div class="relative z-10 flex items-start justify-between gap-4">
         <div>
-          <span
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-widest mb-3"
-          >
+          <span class="poke-tag bg-primary/10 text-primary mb-3">
             <span
               class="material-symbols-outlined text-sm"
               style="font-variation-settings: 'FILL' 1"
               >admin_panel_settings</span
             >
-            Herramienta de Equipo de Dirección
+            Equipo de Dirección
           </span>
           <h2
-            class="text-2xl sm:text-3xl font-extrabold text-on-surface leading-tight"
+            class="text-2xl sm:text-3xl font-headline font-black text-on-surface leading-tight mt-1"
           >
-            Inscripción
+            NUEVO CURSANTE
           </h2>
-          <p class="text-on-surface-variant text-sm mt-1">
-            Añade un cursante a tu curso
+          <p
+            class="text-on-surface-variant/60 text-xs font-medium uppercase tracking-widest mt-1"
+          >
+            Registro oficial de participante
           </p>
         </div>
         <div
-          class="w-12 h-12 rounded-xl bg-primary/8 flex items-center justify-center shrink-0"
+          class="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center shrink-0 shadow-inner"
         >
           <span
             class="material-symbols-outlined text-primary text-3xl"
@@ -40,194 +38,195 @@
         class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/5 rounded-full blur-2xl"
       ></div>
     </div>
-    <div
-      class="bg-surface rounded-2xl p-6 shadow-sm border border-outline-variant/30"
-    >
+
+    <!-- Registration Form -->
+    <div class="poke-panel p-6">
       @if (errorMessage()) {
         <div
-          class="mb-6 p-4 rounded-xl bg-error/10 border border-error/20 flex items-start gap-3 text-error"
+          class="mb-6 p-4 rounded-2xl bg-error/10 border border-error/20 flex items-start gap-3 text-error animate-fade-up"
         >
           <span class="material-symbols-outlined shrink-0 text-[20px]"
             >error</span
           >
-          <p class="text-sm font-medium">{{ errorMessage() }}</p>
+          <p class="text-sm font-bold">{{ errorMessage() }}</p>
         </div>
       }
 
       @if (successMessage()) {
         <div
-          class="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-start gap-3 text-green-700"
+          class="mb-6 p-4 rounded-2xl bg-success/10 border border-success/20 flex items-start gap-3 text-success animate-fade-up"
         >
           <span class="material-symbols-outlined shrink-0 text-[20px]"
             >check_circle</span
           >
-          <p class="text-sm font-medium">{{ successMessage() }}</p>
+          <p class="text-sm font-bold">{{ successMessage() }}</p>
         </div>
       }
 
       <form
         [formGroup]="registrationForm"
         (ngSubmit)="onSubmit()"
-        class="flex flex-col gap-5"
+        class="flex flex-col gap-6"
       >
-        <!-- Nombre Real -->
-        <div class="flex flex-col gap-1.5">
-          <label
-            for="reg-realName"
-            class="text-sm font-medium text-on-surface-variant ml-1"
-            >Nombre Completo</label
-          >
-          <input
-            id="reg-realName"
-            type="text"
-            formControlName="realName"
-            placeholder="Ej. Juan Pérez"
-            class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 text-on-surface outline-none border border-transparent transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/40"
-          />
-        </div>
-
-        <!-- Apodo -->
-        <div class="flex flex-col gap-1.5">
-          <label
-            for="reg-nickname"
-            class="text-sm font-medium text-on-surface-variant ml-1"
-            >Apodo</label
-          >
-          <input
-            id="reg-nickname"
-            type="text"
-            formControlName="nickname"
-            placeholder="Ej. Lobo Astuto"
-            class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 text-on-surface outline-none border border-transparent transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/40"
-          />
-        </div>
-
-        <!-- Nro. de celular -->
-        <div class="flex flex-col gap-1.5">
-          <label
-            for="reg-phone"
-            class="text-sm font-medium text-on-surface-variant ml-1"
-            >Nro. de celular (+591...)</label
-          >
-          <input
-            id="reg-phone"
-            type="tel"
-            formControlName="phoneNumber"
-            placeholder="Ej. 69434386"
-            class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 text-on-surface outline-none border border-transparent transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/40"
-          />
-        </div>
-
-        <!-- Separador -->
-        <div class="my-2 border-b border-outline-variant/30 relative">
-          <span
-            class="absolute left-1/2 -top-2.5 -translate-x-1/2 bg-surface px-3 text-xs font-semibold text-on-surface-variant/60 uppercase tracking-widest"
-          >
-            Credenciales de Acceso
-          </span>
-        </div>
-
-        <!-- Correo Electrónico -->
-        <div class="flex flex-col gap-1.5">
-          <label
-            for="reg-email"
-            class="text-sm font-medium text-on-surface-variant ml-1"
-            >Correo Electrónico</label
-          >
-          <input
-            id="reg-email"
-            type="email"
-            formControlName="email"
-            autocomplete="new-password"
-            placeholder="correo@ejemplo.com"
-            class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 text-on-surface outline-none border border-transparent transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/40"
-          />
-        </div>
-
-        <!-- Contraseña -->
-        <div class="flex flex-col gap-1.5">
-          <label
-            for="reg-password"
-            class="text-sm font-medium text-on-surface-variant ml-1"
-            >Contraseña</label
-          >
-          <input
-            id="reg-password"
-            type="password"
-            formControlName="password"
-            autocomplete="new-password"
-            placeholder="Mínimo 6 caracteres"
-            class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 text-on-surface outline-none border border-transparent transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/40"
-          />
-        </div>
-
-        <!-- Separador -->
-        <div class="my-2 border-b border-outline-variant/30 relative">
-          <span
-            class="absolute left-1/2 -top-2.5 -translate-x-1/2 bg-surface px-3 text-xs font-semibold text-on-surface-variant/60 uppercase tracking-widest"
-          >
-            Asignación
-          </span>
-        </div>
-
-        <!-- Patrulla -->
-        <div class="flex flex-col gap-1.5">
-          @if (!patrolsLoaded()) {
-            <div class="text-sm font-medium text-on-surface-variant ml-1">
-              Patrulla
-            </div>
-            <div
-              class="h-12 w-full rounded-xl bg-surface-container-lowest px-4 flex items-center text-on-surface-variant/60 text-sm animate-pulse"
+        <!-- Sección: Perfil -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="h-1.5 w-8 bg-primary rounded-full"></span>
+            <span
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
             >
-              Cargando patrullas de tu curso...
-            </div>
-          } @else if (availablePatrols().length > 0) {
-            <app-autocomplete
-              [options]="patrolOptions()"
-              [value]="registrationForm.controls.patrolId.value"
-              (valueChange)="
-                registrationForm.controls.patrolId.setValue($event)
-              "
-              label="Patrulla"
-              placeholder="Busca o selecciona una patrulla..."
-            ></app-autocomplete>
-          } @else {
-            <div class="text-sm font-medium text-on-surface-variant ml-1">
-              Patrulla
-            </div>
-            <div
-              class="h-12 w-full rounded-xl bg-red-500/10 border border-red-500/20 px-4 flex items-center text-red-500 text-sm font-medium"
+              Datos Personales
+            </span>
+          </div>
+
+          <!-- Nombre Real -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="reg-realName"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Nombre Completo</label
             >
-              No se encontraron patrullas para tu curso.
-            </div>
-          }
+            <input
+              id="reg-realName"
+              type="text"
+              formControlName="realName"
+              placeholder="Ej. Juan Pérez"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+            />
+          </div>
+
+          <!-- Apodo -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="reg-nickname"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Apodo / Nombre de Selva</label
+            >
+            <input
+              id="reg-nickname"
+              type="text"
+              formControlName="nickname"
+              placeholder="Ej. Akela"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+            />
+          </div>
+
+          <!-- Nro. de celular -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="reg-phone"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Nro. de celular</label
+            >
+            <input
+              id="reg-phone"
+              type="tel"
+              formControlName="phoneNumber"
+              placeholder="Ej. 69434386"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+            />
+          </div>
         </div>
 
-        <div class="pt-4">
-          <!-- Botón nativo oculto para enter -->
-          <button
-            type="submit"
-            class="hidden"
-            aria-hidden="true"
-            tabindex="-1"
-          ></button>
+        <!-- Sección: Credenciales -->
+        <div class="space-y-4 pt-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="h-1.5 w-8 bg-secondary rounded-full"></span>
+            <span
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+            >
+              Acceso
+            </span>
+          </div>
 
+          <!-- Correo Electrónico -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="reg-email"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Correo Electrónico</label
+            >
+            <input
+              id="reg-email"
+              type="email"
+              formControlName="email"
+              autocomplete="new-password"
+              placeholder="correo@ejemplo.com"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-secondary/50 focus:ring-4 focus:ring-secondary/5 transition-all"
+            />
+          </div>
+
+          <!-- Contraseña -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="reg-password"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Contraseña de Acceso</label
+            >
+            <input
+              id="reg-password"
+              type="password"
+              formControlName="password"
+              autocomplete="new-password"
+              placeholder="Mínimo 6 caracteres"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-secondary/50 focus:ring-4 focus:ring-secondary/5 transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Sección: Patrulla -->
+        <div class="space-y-4 pt-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="h-1.5 w-8 bg-tertiary rounded-full"></span>
+            <span
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+            >
+              Asignación
+            </span>
+          </div>
+
+          <div class="flex flex-col">
+            @if (!patrolsLoaded()) {
+              <div
+                class="h-14 w-full rounded-2xl bg-surface-container-low px-4 flex items-center text-on-surface-variant/40 text-xs font-bold uppercase tracking-widest animate-pulse border border-outline-variant/5"
+              >
+                Sincronizando patrullas...
+              </div>
+            } @else if (availablePatrols().length > 0) {
+              <app-autocomplete
+                [options]="patrolOptions()"
+                [value]="registrationForm.controls.patrolId.value"
+                (valueChange)="
+                  registrationForm.controls.patrolId.setValue($event)
+                "
+                label="Seleccionar Patrulla"
+                placeholder="Busca el equipo..."
+              ></app-autocomplete>
+            } @else {
+              <div
+                class="h-14 w-full rounded-2xl bg-error/10 border border-error/20 px-4 flex items-center text-error text-[10px] font-black uppercase tracking-widest"
+              >
+                Error: Sin patrullas disponibles
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="pt-6">
           <app-button
             (click)="onSubmit()"
             variant="primary"
             [isDisabled]="registrationForm.invalid || isLoading()"
-            customClass="w-full py-4 text-sm font-bold gap-2"
+            customClass="w-full h-14 text-sm font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
           >
             @if (isLoading()) {
-              <span
-                class="material-symbols-outlined text-lg animate-spin"
-                style="animation-direction: normal"
-                >progress_activity</span
-              >
-              Creando cuenta...
+              <span class="material-symbols-outlined text-xl animate-spin">
+                progress_activity
+              </span>
+              Procesando...
             } @else {
-              Registrar Cursante
-              <span class="material-symbols-outlined text-lg">how_to_reg</span>
+              <span>Finalizar Registro</span>
+              <span class="material-symbols-outlined text-xl">how_to_reg</span>
             }
           </app-button>
         </div>
