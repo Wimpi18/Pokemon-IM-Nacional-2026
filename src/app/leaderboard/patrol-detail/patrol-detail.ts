@@ -4,12 +4,17 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { of, switchMap, tap, filter, catchError, map } from 'rxjs';
 import { PatrolDetailService } from './patrol-detail.service';
-import { Patrol, PointTransaction } from '../../core/models/firebase.models';
+import {
+  Patrol,
+  PointTransaction,
+  Cursante,
+} from '../../core/models/firebase.models';
 import { Timestamp } from '@angular/fire/firestore';
+import { PokemonArtworkPipe } from '../../shared/pipes/pokemon-artwork.pipe';
 
 @Component({
   selector: 'app-patrol-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, PokemonArtworkPipe],
   templateUrl: './patrol-detail.html',
 })
 export class PatrolDetailComponent {
@@ -48,11 +53,19 @@ export class PatrolDetailComponent {
     }),
   );
 
+  /** Stream members */
+  private readonly members$ = this.patrolId$.pipe(
+    switchMap((id) => this.detailService.getPatrolMembers(id)),
+  );
+
   readonly patrol = toSignal(this.patrol$, {
     initialValue: null as Patrol | null,
   });
   readonly allTransactions = toSignal(this.transactions$, {
     initialValue: [] as PointTransaction[],
+  });
+  readonly members = toSignal(this.members$, {
+    initialValue: [] as Cursante[],
   });
 
   /** Computed total score from all transactions */

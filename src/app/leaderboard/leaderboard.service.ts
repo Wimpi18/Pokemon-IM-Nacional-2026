@@ -102,7 +102,6 @@ export class LeaderboardService {
 
         const patrolIds = patrolsData.map((p) => p.id);
 
-        // Firestore 'in' queries max out at 30 items. For this app that's fine.
         const txQ = query(
           collection(this.firestore, 'point_transactions'),
           where('patrolId', 'in', patrolIds),

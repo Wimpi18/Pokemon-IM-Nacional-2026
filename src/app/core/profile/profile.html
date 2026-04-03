@@ -1,108 +1,461 @@
-<div
-  class="h-[calc(100vh-3.5rem)] overflow-y-auto pb-24 bg-surface-lowest px-4 pt-6"
->
-  <main class="max-w-2xl mx-auto flex flex-col gap-6">
-    <!-- Decorative Header -->
+<main class="min-h-screen bg-poke-mesh pb-32 pt-6 px-4">
+  <div class="max-w-2xl mx-auto space-y-6">
+    <!-- Header / Identification -->
     <div
-      class="relative overflow-hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6 shadow-sm"
+      class="relative overflow-hidden rounded-2xl p-6 shadow-xl bg-poke-gradient text-white"
     >
-      <div class="relative z-10 flex items-start justify-between gap-4">
-        <div>
-          <span
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-widest mb-3 bg-tertiary-container text-on-tertiary-container capitalize"
-          >
+      <div
+        class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"
+      ></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="space-y-1">
+          <span class="poke-tag bg-white/20 text-white border border-white/10">
             <span
               class="material-symbols-outlined text-sm"
               style="font-variation-settings: 'FILL' 1"
-              >{{
-                authService.userProfile()?.role === 'dirigente'
-                  ? 'shield_person'
-                  : 'person'
-              }}</span
+              >account_circle</span
             >
-            {{ authService.userProfile()?.role }}
+            Perfil de Usuario
           </span>
-          <h2
-            class="text-2xl sm:text-3xl font-extrabold text-on-surface leading-tight"
-          >
-            Mi Perfil
+          <h2 class="text-3xl font-headline font-black leading-tight mt-2">
+            {{ profileModel().nickname }}
           </h2>
-        </div>
-        <div
-          class="w-12 h-12 rounded-xl bg-primary/8 flex items-center justify-center shrink-0"
-        >
-          <span
-            class="material-symbols-outlined text-primary text-3xl"
-            style="font-variation-settings: 'FILL' 1"
-            >account_circle</span
-          >
-        </div>
-      </div>
-      <!-- Decorative gradient -->
-      <div
-        class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/5 rounded-full blur-2xl"
-      ></div>
-    </div>
-
-    <div
-      class="bg-surface rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-6"
-    >
-      @if (authService.userProfile(); as profile) {
-        <div class="flex flex-col gap-1">
-          <span
-            class="text-xs uppercase tracking-widest text-on-surface-variant font-medium"
-            >Nombre Real</span
-          >
-          <span class="text-lg font-semibold text-on-surface">{{
-            profile.realName || 'Desconocido'
-          }}</span>
+          <p class="text-xs text-white/70 font-body uppercase tracking-widest">
+            {{
+              authService.userProfile()?.role === 'dirigente'
+                ? 'Equipo de Dirección'
+                : 'Participante'
+            }}
+          </p>
         </div>
 
-        <div class="flex flex-col gap-1">
-          <span
-            class="text-xs uppercase tracking-widest text-on-surface-variant font-medium"
-            >Apodo</span
-          >
-          <span class="text-lg font-semibold text-on-surface">{{
-            profile.nickname || 'Desconocido'
-          }}</span>
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <span
-            class="text-xs uppercase tracking-widest text-on-surface-variant font-medium"
-            >Curso Asignado</span
-          >
-          <span class="text-lg font-semibold text-on-surface">{{
-            profile.course || 'Desconocido'
-          }}</span>
-        </div>
-
-        @if (profile.role === 'cursante') {
-          <div class="flex flex-col gap-1">
-            <span
-              class="text-xs uppercase tracking-widest text-on-surface-variant font-medium"
-              >Nro. de celular</span
-            >
-            <span class="text-lg font-semibold text-on-surface">{{
-              profile.phoneNumber || 'Desconocido'
-            }}</span>
+        @if (selectedPokemonArtwork()) {
+          <div class="relative group">
+            <div
+              class="absolute inset-0 bg-white/20 rounded-full blur-xl group-hover:bg-white/30 transition-colors"
+            ></div>
+            <img
+              [src]="selectedPokemonArtwork()"
+              class="w-24 h-24 object-contain relative z-10 drop-shadow-2xl animate-float"
+              [alt]="profileModel().selectedPokemon"
+            />
           </div>
         }
-      }
-
-      <div
-        class="pt-4 mt-2 border-t border-outline-variant/20 flex justify-end"
-      >
-        <app-button
-          (click)="logout()"
-          variant="outline"
-          customClass="w-full py-3 text-sm font-bold gap-2 focus:ring-error text-error border-error/50 hover:bg-error/10 hover:border-error"
-        >
-          Cerrar Sesión
-          <span class="material-symbols-outlined text-lg">logout</span>
-        </app-button>
       </div>
     </div>
-  </main>
-</div>
+
+    <!-- Feedback Messages -->
+    @if (successMessage()) {
+      <div
+        class="p-4 rounded-2xl bg-success/10 border border-success/20 flex items-start gap-3 text-success animate-fade-up"
+      >
+        <span class="material-symbols-outlined shrink-0 text-[20px]"
+          >check_circle</span
+        >
+        <p class="text-sm font-bold">{{ successMessage() }}</p>
+      </div>
+    }
+    @if (errorMessage()) {
+      <div
+        class="p-4 rounded-2xl bg-error/10 border border-error/20 flex items-start gap-3 text-error animate-fade-up"
+      >
+        <span class="material-symbols-outlined shrink-0 text-[20px]"
+          >error</span
+        >
+        <p class="text-sm font-bold">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <!-- Edit Form -->
+    <section class="poke-panel p-6">
+      <div class="flex items-center justify-between mb-8 px-1">
+        <div class="flex items-center gap-2">
+          <span class="h-1.5 w-8 bg-primary rounded-full"></span>
+          <h3
+            class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+          >
+            Datos de Entrenador
+          </h3>
+        </div>
+        <button
+          type="button"
+          (click)="toggleEdit()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-outline-variant/20 bg-surface-container-low text-[10px] font-black uppercase tracking-widest text-primary active:scale-95 transition-all shadow-sm"
+          [class.bg-error/10]="isEditing()"
+          [class.text-error]="isEditing()"
+          [class.border-error/20]="isEditing()"
+        >
+          <span class="material-symbols-outlined text-[16px]">
+            {{ isEditing() ? 'close' : 'edit' }}
+          </span>
+          {{ isEditing() ? 'Cancelar' : 'Editar Perfil' }}
+        </button>
+      </div>
+
+      <form (submit)="onSubmit()" class="space-y-8">
+        <!-- Main Info -->
+        <div class="space-y-4" [class.opacity-60]="!isEditing()">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Nombre Real -->
+            <div class="flex flex-col gap-2">
+              <label
+                for="p-realName"
+                class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+                >Nombre Completo</label
+              >
+              <input
+                id="p-realName"
+                type="text"
+                [formField]="profileForm.realName"
+                [readOnly]="!isEditing()"
+                class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 transition-all focus:ring-4 focus:ring-primary/5"
+                [class.border-error]="
+                  profileForm.realName().touched() &&
+                  profileForm.realName().invalid()
+                "
+                [class.cursor-not-allowed]="!isEditing()"
+              />
+              @if (
+                profileForm.realName().touched() &&
+                profileForm.realName().invalid()
+              ) {
+                <p
+                  class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >error</span
+                  >
+                  {{ profileForm.realName().errors()[0].message }}
+                </p>
+              }
+            </div>
+
+            <!-- Apodo -->
+            <div class="flex flex-col gap-2">
+              <label
+                for="p-nickname"
+                class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+                >Apodo</label
+              >
+              <input
+                id="p-nickname"
+                type="text"
+                [formField]="profileForm.nickname"
+                [readOnly]="!isEditing()"
+                class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 transition-all focus:ring-4 focus:ring-primary/5"
+                [class.border-error]="
+                  profileForm.nickname().touched() &&
+                  profileForm.nickname().invalid()
+                "
+                [class.cursor-not-allowed]="!isEditing()"
+              />
+              @if (
+                profileForm.nickname().touched() &&
+                profileForm.nickname().invalid()
+              ) {
+                <p
+                  class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >error</span
+                  >
+                  {{ profileForm.nickname().errors()[0].message }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="p-phone"
+              class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+              >Teléfono de Contacto</label
+            >
+            <input
+              id="p-phone"
+              type="tel"
+              [formField]="profileForm.phoneNumber"
+              [readOnly]="!isEditing()"
+              class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-primary/50 transition-all focus:ring-4 focus:ring-primary/5"
+              [class.border-error]="
+                profileForm.phoneNumber().touched() &&
+                profileForm.phoneNumber().invalid()
+              "
+              [class.cursor-not-allowed]="!isEditing()"
+            />
+            @if (
+              profileForm.phoneNumber().touched() &&
+              profileForm.phoneNumber().invalid()
+            ) {
+              <p
+                class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+              >
+                <span class="material-symbols-outlined text-[14px]">error</span>
+                {{ profileForm.phoneNumber().errors()[0].message }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Pokemon Selection -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="h-1.5 w-8 bg-secondary rounded-full"></span>
+            <span
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+              >Pokémon Acompañante</span
+            >
+          </div>
+
+          @if (isEditing()) {
+            <div class="flex flex-col gap-2 animate-fade-down">
+              <app-autocomplete
+                [options]="pokemonOptions()"
+                [value]="profileForm.selectedPokemon().value()"
+                (valueChange)="profileForm.selectedPokemon().value.set($event)"
+                label="Elegir Pokémon"
+                placeholder="Busca el nombre..."
+              ></app-autocomplete>
+              @if (
+                profileForm.selectedPokemon().touched() &&
+                profileForm.selectedPokemon().invalid()
+              ) {
+                <p
+                  class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >error</span
+                  >
+                  {{ profileForm.selectedPokemon().errors()[0].message }}
+                </p>
+              }
+            </div>
+
+            <!-- Random Proposal Card -->
+            <div
+              class="bg-surface-container-low rounded-2xl p-4 border border-outline-variant/10 flex items-center justify-between gap-4 animate-fade-up"
+            >
+              <div class="flex items-center gap-4">
+                @if (proposalArtwork()) {
+                  <img
+                    [src]="proposalArtwork()"
+                    class="w-12 h-12 object-contain drop-shadow-md"
+                    [alt]="randomProposal()"
+                  />
+                }
+                <div class="space-y-0.5">
+                  <span
+                    class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest"
+                    >Propuesta Aleatoria</span
+                  >
+                  <p class="text-sm font-black text-on-surface uppercase">
+                    {{ randomProposal() }}
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  (click)="refreshProposal()"
+                  class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center hover:bg-white transition-colors border border-outline-variant/5 shadow-sm active:scale-95"
+                >
+                  <span class="material-symbols-outlined text-sm">refresh</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="useProposal()"
+                  class="px-4 h-10 rounded-xl bg-secondary text-white text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+                >
+                  Usar
+                </button>
+              </div>
+            </div>
+          } @else {
+            <!-- Read-only view -->
+            <div
+              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5 shadow-inner animate-fade-in"
+            >
+              <div
+                class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center border border-outline-variant/5"
+              >
+                <img
+                  [src]="selectedPokemonArtwork()"
+                  class="w-12 h-12 object-contain drop-shadow-md"
+                  [alt]="profileForm.selectedPokemon().value()"
+                />
+              </div>
+              <div>
+                <span
+                  class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest"
+                  >Compañero Actual</span
+                >
+                <h4 class="text-base font-black text-on-surface uppercase">
+                  {{ profileForm.selectedPokemon().value() }}
+                </h4>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Security / Password -->
+        @if (isEditing()) {
+          <div class="space-y-4 animate-fade-down">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="h-1.5 w-8 bg-error rounded-full"></span>
+              <span
+                class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+                >Cambiar Contraseña (Opcional)</span
+              >
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-2">
+                <label
+                  for="p-newPass"
+                  class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+                  >Nueva Contraseña</label
+                >
+                <input
+                  id="p-newPass"
+                  type="password"
+                  [formField]="profileForm.newPassword"
+                  placeholder="••••••••"
+                  class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-error/50 focus:ring-4 focus:ring-error/5"
+                  [class.border-error]="
+                    profileForm.newPassword().touched() &&
+                    profileForm.newPassword().invalid()
+                  "
+                />
+                @if (
+                  profileForm.newPassword().touched() &&
+                  profileForm.newPassword().invalid()
+                ) {
+                  <p
+                    class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >error</span
+                    >
+                    {{ profileForm.newPassword().errors()[0].message }}
+                  </p>
+                }
+              </div>
+              <div class="flex flex-col gap-2">
+                <label
+                  for="p-confirmPass"
+                  class="text-xs font-bold text-on-surface/70 ml-1 uppercase tracking-wider"
+                  >Confirmar</label
+                >
+                <input
+                  id="p-confirmPass"
+                  type="password"
+                  [formField]="profileForm.confirmPassword"
+                  placeholder="••••••••"
+                  class="h-12 w-full rounded-2xl bg-surface-container-lowest px-4 text-sm text-on-surface outline-none border border-outline-variant/10 shadow-inner focus:border-error/50 focus:ring-4 focus:ring-error/5"
+                  [class.border-error]="
+                    profileForm.confirmPassword().touched() &&
+                    profileForm.confirmPassword().invalid()
+                  "
+                />
+                @if (
+                  profileForm.confirmPassword().touched() &&
+                  profileForm.confirmPassword().invalid()
+                ) {
+                  <p
+                    class="text-error text-[10px] font-bold mt-1 px-1 flex items-center gap-1"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >error</span
+                    >
+                    {{ profileForm.confirmPassword().errors()[0].message }}
+                  </p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Locked Info -->
+        <div class="space-y-4 opacity-70 grayscale-[0.5]">
+          <div class="flex items-center gap-2 mb-2">
+            <span
+              class="h-1.5 w-8 bg-on-surface-variant/20 rounded-full"
+            ></span>
+            <span
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40"
+              >Registros Fijos (Solo lectura)</span
+            >
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+              <span
+                class="text-xs font-bold text-on-surface/50 ml-1 uppercase tracking-wider"
+                >Curso</span
+              >
+              <div
+                class="h-12 w-full rounded-2xl bg-surface-container-low px-4 flex items-center text-sm font-medium border border-outline-variant/10 text-on-surface/50"
+              >
+                {{ authService.userProfile()?.course }}
+              </div>
+            </div>
+            @if (authService.userProfile()?.role === 'cursante') {
+              <div class="flex flex-col gap-2">
+                <span
+                  class="text-xs font-bold text-on-surface/50 ml-1 uppercase tracking-wider"
+                  >Patrulla</span
+                >
+                <div
+                  class="h-12 w-full rounded-2xl bg-surface-container-low px-4 flex items-center text-sm font-medium border border-outline-variant/10 text-on-surface/50"
+                >
+                  {{ patrolName() }}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-6 flex flex-col gap-4">
+          <!-- Hidden real submit button so Enter key works -->
+          <button
+            type="submit"
+            class="hidden"
+            aria-hidden="true"
+            tabindex="-1"
+            [disabled]="profileForm().invalid() || isLoading()"
+          >
+            Real Submit
+          </button>
+
+          <app-button
+            variant="primary"
+            (click)="onSubmit()"
+            [isDisabled]="profileForm().invalid() || isLoading()"
+            customClass="w-full h-24 text-sm font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+          >
+            @if (isLoading()) {
+              <span class="material-symbols-outlined text-xl animate-spin"
+                >progress_activity</span
+              >
+              Procesando...
+            } @else {
+              <span>Actualizar Perfil</span>
+              <span class="material-symbols-outlined text-xl">save</span>
+            }
+          </app-button>
+
+          <button
+            type="button"
+            (click)="logout()"
+            class="flex items-center justify-center gap-2 text-[10px] font-black text-error uppercase tracking-widest py-3 hover:bg-error/5 rounded-2xl transition-colors"
+          >
+            <span class="material-symbols-outlined text-xl">logout</span>
+            Desconectar Sesión
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>

@@ -6,9 +6,15 @@ import {
   onAuthStateChanged,
   User,
   UserCredential,
+  updatePassword,
 } from '@angular/fire/auth';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
-import { Cursante, Dirigente } from '../models/firebase.models';
+import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import {
+  Cursante,
+  Dirigente,
+  User as FirestoreUser,
+} from '../models/firebase.models';
+
 type UserProfile = Cursante | Dirigente;
 
 @Injectable({
@@ -30,30 +36,30 @@ export class AuthService {
     onAuthStateChanged(this.auth, async (user) => {
       this.currentUser.set(user);
 
-      // Si hay un usuario conectado en Auth, traemos su Perfil en Firestore para averiguar su ROL
       if (user) {
-        try {
-          const docRef = doc(this.firestore, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
-
-          if (docSnap.exists()) {
-            this.userProfile.set(docSnap.data() as UserProfile);
-          } else {
-            console.warn(
-              `No se encontró perfil en Firestore para el usuario: ${user.uid}`,
-            );
-            this.userProfile.set(null);
-          }
-        } catch (error) {
-          console.error('Error fetching user role from Firestore', error);
-          this.userProfile.set(null);
-        }
+        await this.syncProfile(user.uid);
       } else {
         this.userProfile.set(null);
       }
 
       this.isAuthReady.set(true);
     });
+  }
+
+  /** Sync firestore profile to signal */
+  private async syncProfile(uid: string) {
+    try {
+      const docRef = doc(this.firestore, 'users', uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        this.userProfile.set(docSnap.data() as UserProfile);
+      } else {
+        this.userProfile.set(null);
+      }
+    } catch (error) {
+      console.error('Error syncing profile:', error);
+    }
   }
 
   async loginEmail(
@@ -68,12 +74,12 @@ export class AuthService {
       );
       const user = credential.user;
 
-      // Validar si existe Perfil Oficial
       const docRef = doc(this.firestore, 'users', user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const profile = docSnap.data() as UserProfile;
+        this.userProfile.set(profile);
         return { credential, profile };
       } else {
         await this.logout();
@@ -85,10 +91,36 @@ export class AuthService {
     }
   }
 
+  /** Update Firestore user data */
+  async updateProfile(
+    uid: string,
+    data: Partial<FirestoreUser>,
+  ): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    await updateDoc(docRef, data);
+    // Refresh local signal
+    await this.syncProfile(uid);
+  }
+
+  /** Update Auth password */
+  async updateAuthPassword(newPassword: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user) {
+      await updatePassword(user, newPassword);
+    } else {
+      throw new Error('no-auth-user');
+    }
+  }
+
   /** Cerrar sesión completamente */
   logout(): Promise<void> {
-    return signOut(this.auth).catch((error) => {
-      console.error('Logout error:', error);
-    });
+    return signOut(this.auth)
+      .then(() => {
+        this.userProfile.set(null);
+        this.currentUser.set(null);
+      })
+      .catch((error) => {
+        console.error('Logout error:', error);
+      });
   }
 }

@@ -72,11 +72,6 @@ export class PointsService {
       searchTerms: searchTerms,
     };
 
-    console.log(
-      '[PointsService] Enviando transacción a Firestore:',
-      transaction,
-    );
-
     await this.firebaseService.addPointTransaction(transaction);
   }
 }

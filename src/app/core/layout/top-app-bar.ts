@@ -13,13 +13,13 @@ import { AuthService } from '../services/auth.service';
       >
         <div class="flex items-center gap-2.5">
           <div
-            class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center"
+            class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden"
           >
-            <span
-              class="material-symbols-outlined text-primary text-xl"
-              style="font-variation-settings: 'FILL' 1"
-              >{{ icon() }}</span
-            >
+            <img
+              src="/Pokeball.ico"
+              class="w-6 h-6 object-contain"
+              alt="Logo"
+            />
           </div>
           <h1
             class="font-headline uppercase tracking-widest font-extrabold text-on-surface text-sm"

@@ -8,7 +8,11 @@ import {
   doc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { PointTransaction, Patrol } from '../../core/models/firebase.models';
+import {
+  PointTransaction,
+  Patrol,
+  Cursante,
+} from '../../core/models/firebase.models';
 
 @Injectable({ providedIn: 'root' })
 export class PatrolDetailService {
@@ -35,10 +39,6 @@ export class PatrolDetailService {
 
   /** Stream all point transactions for a patrol, ordered by most recent first */
   getPatrolTransactions(patrolId: string): Observable<PointTransaction[]> {
-    console.log(
-      '[PatrolDetailService] Consultando transacciones para:',
-      patrolId,
-    );
     const txRef = collection(this.firestore, 'point_transactions');
     const q = query(txRef, where('patrolId', '==', patrolId));
 
@@ -57,15 +57,36 @@ export class PatrolDetailService {
             return timeB - timeA; // Descendente: más reciente primero
           });
 
-          console.log(
-            `[PatrolDetailService] ${transactions.length} transacciones recibidas.`,
-          );
           subscriber.next(transactions);
         },
         (error) => {
           console.error('[PatrolDetailService] Error en snapshot:', error);
           subscriber.error(error);
         },
+      );
+      return () => unsub();
+    });
+  }
+
+  /** Stream all members for a patrol */
+  getPatrolMembers(patrolId: string): Observable<Cursante[]> {
+    const userRef = collection(this.firestore, 'users');
+    const q = query(
+      userRef,
+      where('role', '==', 'cursante'),
+      where('patrolId', '==', patrolId),
+    );
+
+    return new Observable((subscriber) => {
+      const unsub = onSnapshot(
+        q,
+        (snapshot) => {
+          const members = snapshot.docs.map(
+            (d) => ({ ...d.data(), uid: d.id }) as Cursante,
+          );
+          subscriber.next(members);
+        },
+        (error) => subscriber.error(error),
       );
       return () => unsub();
     });

@@ -75,7 +75,6 @@ export class FirebaseService {
 
     try {
       await addDoc(transactionsRef, transaction);
-      console.log('Transacción de puntos registrada con éxito.');
     } catch (error) {
       console.error('Error en la transacción de puntos: ', error);
       throw error;

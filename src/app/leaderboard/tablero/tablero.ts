@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService, RankedPatrol } from '../leaderboard.service';
 import { Cursante } from '../../core/models/firebase.models';
+import { PokemonArtworkPipe } from '../../shared/pipes/pokemon-artwork.pipe';
 import {
   of,
   switchMap,
@@ -16,7 +17,7 @@ import {
 
 @Component({
   selector: 'app-tablero',
-  imports: [RouterLink],
+  imports: [RouterLink, PokemonArtworkPipe],
   templateUrl: './tablero.html',
 })
 export class TableroComponent {
