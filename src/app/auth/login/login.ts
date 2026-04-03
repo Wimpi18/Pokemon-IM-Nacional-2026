@@ -73,7 +73,7 @@ export class LoginComponent {
           error?.message === 'not-found'
         ) {
           this.errorMessage.set(
-            'Acceso denegado. Tu cuenta no tiene privilegios de equipo de dirección.',
+            'Acceso denegado. Comunícate con el administrador del sistema.',
           );
         } else {
           this.errorMessage.set('Credenciales incorrectas.');
