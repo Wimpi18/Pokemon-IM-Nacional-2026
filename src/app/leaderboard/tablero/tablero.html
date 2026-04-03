@@ -168,8 +168,9 @@
             [class]="group.patrols.length > 1 ? 'grid grid-cols-1 gap-3' : ''"
           >
             @for (patrol of group.patrols; track patrol.id; let i = $index) {
-              <div
-                class="relative flex items-center p-4 rounded-xl shadow-sm border-l-[6px] overflow-hidden transition-all duration-200"
+              <a
+                [routerLink]="['/tablero', patrol.id]"
+                class="relative flex items-center p-4 rounded-xl shadow-sm border-l-[6px] overflow-hidden transition-all duration-200 cursor-pointer active:scale-[0.98] no-underline"
                 [class]="
                   getRankBorderColor(group.rank) +
                   (patrol.isCurrentUserPatrol
@@ -224,21 +225,27 @@
                   </p>
                 </div>
 
-                <!-- Score -->
-                <div class="text-right shrink-0 ml-3">
+                <!-- Score + Chevron -->
+                <div class="flex items-center gap-2 shrink-0 ml-3">
+                  <div class="text-right">
+                    <span
+                      class="block font-headline font-black text-xl"
+                      [class]="getScoreColor(group.rank)"
+                    >
+                      {{ patrol.totalScore }}
+                    </span>
+                    <span
+                      class="font-label text-[9px] font-bold text-on-surface-variant/60 uppercase"
+                    >
+                      pts
+                    </span>
+                  </div>
                   <span
-                    class="block font-headline font-black text-xl"
-                    [class]="getScoreColor(group.rank)"
+                    class="material-symbols-outlined text-on-surface-variant/30 text-lg"
+                    >chevron_right</span
                   >
-                    {{ patrol.totalScore }}
-                  </span>
-                  <span
-                    class="font-label text-[9px] font-bold text-on-surface-variant/60 uppercase"
-                  >
-                    pts
-                  </span>
                 </div>
-              </div>
+              </a>
             }
           </div>
         </div>

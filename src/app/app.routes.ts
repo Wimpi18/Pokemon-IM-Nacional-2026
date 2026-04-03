@@ -31,6 +31,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'tablero/:patrolId',
+        loadComponent: () =>
+          import('./leaderboard/patrol-detail/patrol-detail').then(
+            (m) => m.PatrolDetailComponent,
+          ),
+      },
+      {
         path: 'registrar-cursante',
         canActivate: [roleGuard],
         data: { roles: ['dirigente'] },

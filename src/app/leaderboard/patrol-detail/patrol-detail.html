@@ -1,0 +1,279 @@
+<main class="max-w-2xl mx-auto px-5 pt-6 pb-28 space-y-6">
+  <!-- Back Navigation + Hero -->
+  @if (patrol(); as pat) {
+    <div
+      class="relative overflow-hidden rounded-2xl p-6 shadow-lg bg-linear-to-br from-tertiary to-on-tertiary-fixed-variant"
+    >
+      <div
+        class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute -left-8 -bottom-8 w-28 h-28 bg-white/5 rounded-full blur-2xl"
+      ></div>
+
+      <div class="relative z-10">
+        <!-- Back link -->
+        <a
+          routerLink="/tablero"
+          class="inline-flex items-center gap-1 text-white/70 text-xs font-bold uppercase tracking-widest mb-4 active:scale-95 transition-transform"
+        >
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          Tablero
+        </a>
+
+        <div class="flex items-center justify-between">
+          <div class="space-y-1">
+            <span
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/15 text-white/90 text-[10px] font-bold uppercase tracking-widest"
+            >
+              <span
+                class="material-symbols-outlined text-sm"
+                style="font-variation-settings: 'FILL' 1"
+                >history</span
+              >
+              Historial
+            </span>
+            <h2
+              class="text-2xl sm:text-3xl font-headline font-extrabold text-white leading-tight"
+            >
+              {{ pat.name }}
+            </h2>
+            <p class="text-xs text-white/60 font-body">{{ pat.course }}</p>
+          </div>
+
+          <!-- Total Score -->
+          <div class="text-right">
+            <span class="block font-headline font-black text-3xl text-white">
+              {{ totalScore() }}
+            </span>
+            <span
+              class="font-label text-[9px] font-bold text-white/60 uppercase tracking-widest"
+              >Pts totales</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Filters Section -->
+  <section class="space-y-3">
+    <div class="flex items-end justify-between px-1">
+      <div class="space-y-1">
+        <h3
+          class="font-headline text-xl font-extrabold text-on-surface uppercase tracking-tight"
+        >
+          Movimientos
+        </h3>
+        <div class="h-1 w-20 bg-tertiary rounded-full"></div>
+      </div>
+      @if (activeFilters() > 0) {
+        <button
+          (click)="clearFilters()"
+          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase tracking-widest active:scale-95 transition-transform"
+        >
+          <span class="material-symbols-outlined text-sm">close</span>
+          Limpiar
+        </button>
+      }
+    </div>
+
+    <!-- Search + Date -->
+    <div class="flex gap-3">
+      <!-- Search Bar -->
+      <div class="flex-1 relative">
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl"
+          >search</span
+        >
+        <input
+          type="text"
+          placeholder="Buscar justificación o dirigente..."
+          [value]="searchText()"
+          (input)="onSearchInput($event)"
+          class="h-12 w-full rounded-xl bg-surface-container-lowest pl-10 pr-4 text-sm text-on-surface outline-none border border-transparent transition-all focus:border-tertiary/50 focus:ring-2 focus:ring-tertiary/20 placeholder:text-on-surface-variant/40"
+        />
+      </div>
+
+      <!-- Date Picker Trigger -->
+      <div class="relative shrink-0">
+        <input
+          #dateInput
+          type="date"
+          [value]="selectedDate()"
+          (change)="onDateChange($event)"
+          class="absolute inset-0 opacity-0 pointer-events-none"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          (click)="openDatePicker(dateInput)"
+          class="h-12 w-12 rounded-xl bg-surface-container-lowest flex items-center justify-center border transition-all cursor-pointer relative active:scale-90"
+          [class]="
+            selectedDate()
+              ? 'border-tertiary/50 ring-2 ring-tertiary/20'
+              : 'border-transparent'
+          "
+        >
+          <span
+            class="material-symbols-outlined text-xl"
+            [class]="
+              selectedDate() ? 'text-tertiary' : 'text-on-surface-variant/50'
+            "
+            style="font-variation-settings: 'FILL' 1"
+            >calendar_month</span
+          >
+        </button>
+      </div>
+    </div>
+
+    <!-- Active date filter chip -->
+    @if (selectedDate()) {
+      <div class="flex items-center gap-2 px-1">
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tertiary/10 text-tertiary text-xs font-bold"
+        >
+          <span class="material-symbols-outlined text-sm">event</span>
+          {{ formatDateStr(selectedDate()) }}
+          <button
+            (click)="selectedDate.set('')"
+            class="ml-1 hover:text-error transition-colors"
+          >
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </span>
+      </div>
+    }
+  </section>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="space-y-3">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div
+          class="h-24 w-full rounded-xl bg-surface-container-low animate-pulse"
+        ></div>
+      }
+    </div>
+  } @else if (filteredTransactions().length === 0) {
+    <!-- Empty State -->
+    <div
+      class="flex flex-col items-center justify-center py-16 text-center gap-3"
+    >
+      <span
+        class="material-symbols-outlined text-5xl text-on-surface-variant/25"
+        >receipt_long</span
+      >
+      @if (activeFilters() > 0) {
+        <p class="text-sm text-on-surface-variant/60 font-medium">
+          No se encontraron movimientos con esos filtros.
+        </p>
+        <button
+          (click)="clearFilters()"
+          class="mt-2 px-5 py-2 rounded-xl bg-tertiary text-on-tertiary text-sm font-bold active:scale-95 transition-transform"
+        >
+          Limpiar filtros
+        </button>
+      } @else {
+        <p class="text-sm text-on-surface-variant/60 font-medium">
+          Esta patrulla aún no tiene movimientos de puntos.
+        </p>
+      }
+    </div>
+  } @else {
+    <!-- Transactions Timeline -->
+    <section class="space-y-3">
+      @for (tx of filteredTransactions(); track tx.id; let i = $index) {
+        <div
+          class="relative flex gap-4 p-4 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 transition-all duration-200"
+          [class]="tx.points >= 0 ? 'border-l-tertiary' : 'border-l-error'"
+        >
+          <!-- Points Badge -->
+          <div
+            class="w-14 h-14 rounded-xl flex flex-col items-center justify-center shrink-0"
+            [class]="
+              tx.points >= 0
+                ? 'bg-tertiary/10 text-tertiary'
+                : 'bg-error/10 text-error'
+            "
+          >
+            <span class="font-headline font-black text-lg leading-none">
+              {{ tx.points >= 0 ? '+' : '' }}{{ tx.points }}
+            </span>
+            <span
+              class="text-[8px] font-bold uppercase tracking-wider opacity-70 mt-0.5"
+            >
+              pts
+            </span>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <!-- Justification -->
+            <p class="text-sm text-on-surface font-medium leading-snug">
+              {{ tx.justification }}
+            </p>
+
+            <!-- Metadata Row -->
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <!-- Target Type Badge -->
+              <span
+                class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest"
+                [class]="
+                  tx.targetType === 'patrulla'
+                    ? 'text-tertiary'
+                    : 'text-secondary'
+                "
+              >
+                <span
+                  class="material-symbols-outlined text-xs"
+                  style="font-variation-settings: 'FILL' 1"
+                  >{{
+                    tx.targetType === 'patrulla' ? 'groups' : 'person'
+                  }}</span
+                >
+                {{ tx.targetType === 'patrulla' ? 'Patrulla' : 'Integrante' }}
+              </span>
+
+              <!-- Separator -->
+              <span class="w-px h-3 bg-on-surface-variant/15"></span>
+
+              <!-- Author -->
+              <span
+                class="inline-flex items-center gap-1 text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-widest"
+              >
+                <span
+                  class="material-symbols-outlined text-xs"
+                  style="font-variation-settings: 'FILL' 1"
+                  >shield_person</span
+                >
+                {{ tx.authorName }}
+              </span>
+            </div>
+
+            <!-- Date + Time -->
+            <div
+              class="flex items-center gap-1.5 text-[9px] text-on-surface-variant/40 font-medium"
+            >
+              <span class="material-symbols-outlined text-xs">schedule</span>
+              {{ formatDate(tx.timestamp) }} · {{ formatTime(tx.timestamp) }}
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Results count -->
+    <div class="text-center py-2">
+      <span
+        class="text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest"
+      >
+        {{ filteredTransactions().length }}
+        {{ filteredTransactions().length === 1 ? 'movimiento' : 'movimientos' }}
+        @if (activeFilters() > 0) {
+          filtrados
+        }
+      </span>
+    </div>
+  }
+</main>

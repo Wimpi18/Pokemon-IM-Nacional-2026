@@ -1,5 +1,6 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService, RankedPatrol } from '../leaderboard.service';
 import { Cursante } from '../../core/models/firebase.models';
@@ -15,6 +16,7 @@ import {
 
 @Component({
   selector: 'app-tablero',
+  imports: [RouterLink],
   templateUrl: './tablero.html',
 })
 export class TableroComponent {
